@@ -1,6 +1,6 @@
 # Django Views
 
-In the previous lesson, we looked at how Django deals with data using models. Today we are going to look at 
+In the previous lesson, we looked at how Django deals with data using models. Today we are going to look at how to actually display that data using views and templates!
 
 ## View Functions
 

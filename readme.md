@@ -16,7 +16,7 @@ templates!
 
 Using the models from yesterday, let's create some views to display our
 application's data! Views are really similar to controllers in the other
-languages we have looked at so far. They pass data to our templates. 
+frameworks we have looked at: they pass data to our templates.
 
 In your view file, you may see that `render` is already imported. This function
 is super helpful, and it does exactly what it sounds like - it renders views!
@@ -36,7 +36,7 @@ Let's break this function down a bit. Let's first look at the declaration of a
 function. It looks like any other Python function! The only parameter to it is
 the request, which is what it sounds like. This is the HTTP Request dictionary.
 Then we are selecting all of the artists from the database into a QuerySet
-called artists. 
+called artists.
 
 On the third line, we see that we are rendering a template. The first argument
 is the request argument, the second is the template that we want to render, and
@@ -58,9 +58,7 @@ use regular expressions (or regex's) instead of variables nested within them.
 This eliminates a ton of the issues we've seen where we've had to reorder urls,
 but it makes them a bit more complicated. We won't go over them in detail here,
 but [here](http://www.aivosto.com/vbtips/regex.html) is a link about them in
-more detail, and
-[here](https://www.google.com/search?q=regex+sanbox&oq=regex+sanbox&aqs=chrome..69i57j0l5.2240j0j7&sourceid=chrome&ie=UTF-8)
-is a sandbox to test them out.
+more detail, and [here](https://regexr.com/) is a sandbox to test them out.
 
 A quick primer on what will be helpful:
 
@@ -547,3 +545,13 @@ url(r'^artists/(?P<pk>\d+)/delete$', views.artist_delete, name='artist_delete'),
 ### You Do: Song Delete
 
 Do the same thing for Songs!
+
+## Conclusion
+
+## Additional Resouces
+
+* [Django Docs: Views](https://docs.djangoproject.com/en/2.0/topics/http/views/)
+* [Django Docs: Base Views](https://docs.djangoproject.com/en/2.0/ref/class-based-views/base/)
+* [Django Templating Language](https://docs.djangoproject.com/en/2.0/ref/templates/language/)
+* [Regular Expressions - An Introduction](http://www.aivosto.com/vbtips/regex.html)
+* [Regex Sandbox](https://regexr.com/)

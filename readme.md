@@ -116,7 +116,7 @@ page to another.
 Now that we have two URLs, let's finish up by writing the templates to render
 our views!
 
-### Templates and Django Templating Language
+## Templates and Django Templating Language
 
 In previous classes, we've seen the templating languages ERB and Handlebars.
 Django also has its own! It looks a lot like Handlebars  in that it uses a bunch
@@ -139,10 +139,13 @@ Tunr, let's add the following code:
 Right now, we will keep our `href`'s blank until we have more routes. The Django
 template here loops through our QuerySet of artists, rendering the name of each.
 The distinction between `{{}}` and `{%%}` usually is the difference between
-rendering or just running code (i.e. if's or for's). The one exception is with
+rendering or just running code (i.e. `if`'s or `for`'s). The one exception is with
 url's - which we will see later on today.
 
 ### You Do: Create List View for Songs
+
+We are now rendering a list of artists in our `artist_list` view. Your task is
+to do the same for songs.
 
 Hint: [here](https://github.com/ga-wdi-exercises/tunr_rails_many_to_many/blob/favorites-solution/app/views/songs/index.html.erb) is the ERB one!
 
@@ -156,16 +159,16 @@ def artist_detail(request, pk):
     return render(request, 'tunr/artist_detail.html', {'artist': artist})
 ```
 
-This function is really similar to the list view, this time we just are
+This function is really similar to the list view, this time we are just
 selecting one artist instead of all of them.  We receive a second parameter to
-the function -- the primary key of the artist we want to display. Let's look at
+the function - the primary key of the artist we want to display. Let's look at
 where that is coming from and hook up the URL to the view in `urls.py`.
 
 ```python
 url(r'^artists/(?P<pk>\d+)$', views.artist_detail, name='artist_detail'),
 ```
 
-Whith the show url, we get to see the beauty of RegEx's for Django's url's. This
+With the show url, we get to see the beauty of RegEx's for Django's url's. This
 Regex is allowing us to access a variable called `pk` from the URL. The
 parentheses and P say that everything within those parentheses is a "capture
 group". The `d` is saying that the `pk` variable must be a number (using d for
@@ -173,7 +176,7 @@ digit). In Django we use `pk` as an alternate term for `id`. In the database,
 primary keys are the unique ids for each row, and Django adopts that terminology
 by convention.
 
-Finally, let's write our template.
+Finally, let's write our template:
 
 ```html
 # /tunr/artist_detail.html
@@ -223,7 +226,7 @@ that! Let's first add a `base.html` file in the `tunr` views. It's at first
 going to look exactly like any other HTML base template we normally have, with
 one exception. We will have a block where we want our template to go. We will
 name this block content. We could have multiple blocks if we wanted. In that
-case they would be named other things -- say "title" or "header" instead of
+case they would be named other things - say "title" or "header" instead of
 "content".
 
 ```html
@@ -243,7 +246,7 @@ case they would be named other things -- say "title" or "header" instead of
 </html>
 ```
 
-Now let's hook this up to our templates -- which ends up looking like this:
+Now let's hook this up to our templates - which ends up looking like this:
 
 ```html
 {% extends 'tunr/base.html' %}
@@ -429,7 +432,6 @@ models as well](https://docs.djangoproject.com/en/1.11/ref/models/options/)).
 For clarification (and maybe interview) purposes, this is different than a
 Python `metaclass`. They deal with meta-programming in Python!
 
-
 Now, in our `views.py` file, let's make a view function.
 
 ```python
@@ -459,7 +461,7 @@ If instead the request method is 'get', we just create an instance of the form
 without any pre-filled data, and then we will render the form template.
 
 Now let's make the template. Since we already declared the fields we want in our
-form in the `forms.py file, we can just do this:
+form in the `forms.py` file, we can just do this:
 
 ```html
 {% extends 'tunr/base.html' %}
@@ -555,3 +557,5 @@ Do the same thing for Songs!
 * [Django Templating Language](https://docs.djangoproject.com/en/2.0/ref/templates/language/)
 * [Regular Expressions - An Introduction](http://www.aivosto.com/vbtips/regex.html)
 * [Regex Sandbox](https://regexr.com/)
+* [Django Docs: Working with Forms](https://docs.djangoproject.com/en/2.0/topics/forms/)
+* [Django Docs: Forms](https://docs.djangoproject.com/en/2.0/ref/forms/)

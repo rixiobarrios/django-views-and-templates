@@ -1,5 +1,13 @@
 # Django Views
 
+## Learning Objectives
+
+* Explain how we render data in Django using views
+* Use regex to define urls in a Django app
+* Create views using the Django templating language
+
+## Framing
+
 In the previous lesson, we looked at how Django deals with data using models.
 Today we are going to look at how to actually display that data using views and
 templates!

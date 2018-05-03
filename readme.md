@@ -40,26 +40,21 @@ Write the view and the url to list all of the songs in the application.
 
 Let's go ahead at how we will access these views -- through the URLs!
 
-In Django, the URL's deviate from the ones we've seen in other frameworks. They use regular expressions (or regex's) instead of variables nested within them. This eliminates a ton of the issues we've seen where we've had to reorder urls, but it makes them a bit more complicated. We won't go over them in detail here, but [here](http://www.aivosto.com/vbtips/regex.html) is a link about them in more detail, and [here](https://www.google.com/search?q=regex+sanbox&oq=regex+sanbox&aqs=chrome..69i57j0l5.2240j0j7&sourceid=chrome&ie=UTF-8) is a sandbox to test them out.
-
-A quick primer on what will be helpful:
-* `^` - beginning of the text
-* `$` - end of  text
-* `\d` - digit
-* `+` - required
-* `()` - captures part of a pattern
+In Django, the URL's deviate from the ones we've seen in other frameworks. They use stricter parameters where we have to specify the types of parameters. This eliminates a ton of the issues we've seen where we've had to reorder urls, but it makes them a bit more complicated. 
 
 Let's look at the existing `urls.py` in the `tunr_django` directory. In there, let's add a couple things. 
 
 ```python
-from django.conf.urls import include, url
+from django.conf.urls import include
+from django.urls import path
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'', include('tunr.urls'))
+    path('admin', admin.site.urls),
+    path('', include('tunr.urls')),
 ]
 ```
+
 
 We are adding an import - `include` so that we can include other url files in our main one. We are doing this in order to make our app more modular -- again these "mini apps" in Django are supposed to plug into another parent app if needed.
 
@@ -67,11 +62,11 @@ Let's write our urls for our app in another file called `tunr/urls.py`.
 
 tunr/urls.py
 ```python
-from django.conf.urls import url
+from django.urls import path
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.artist_list, name='artist_list'),
+    path('', views.artist_list, name='artist_list'),
 ]
 ```
 
@@ -121,7 +116,7 @@ def artist_detail(request, pk):
 This function is really similar to the list view, this time we just are selecting one artist instead of all of them.  We receive a second parameter to the function -- the primary key of the artist we want to display. Let's look at where that is coming from and hook up the URL to the view in `urls.py`.
 
 ```python
-    url(r'^artists/(?P<pk>\d+)$', views.artist_detail, name='artist_detail'),
+    path('artists/<int:pk>', views.artist_detail, name='artist_detail'),
 ```
 Whith the show url, we get to see the beauty of RegEx's for Django's url's. This Regex is allowing us to access a variable called `pk` from the URL. The parentheses and P say that everything within those parentheses is a "capture group". The `d` is saying that the `pk` variable must be a number (using d for digit). In Django we use `pk` as an alternate term for `id`. In the database, primary keys are the unique ids for each row, and Django adopts that terminology by convention.
 
@@ -321,6 +316,7 @@ Finally, let's add this into our `base.html`.
     </body>
 </html>
 ```
+
 On line 1, we are telling Django to load the static files onto the current page. Then in the `link` tag, we can refer to our static file like the above. This may seem a bit messy, but it really helps when you deploy your app, especially if you want to host your static files on a separate server. 
 
 ### We Do: Artist Create
@@ -384,7 +380,7 @@ We also need a submit button and then we are good! Errors are handled for us in-
 
 Finally, just add a url!
 ```python
-    url(r'^artists/new$', views.artist_create, name='artist_create'),
+    path('artists/new', views.artist_create, name='artist_create'),
 ```
 
 ### You Do: Song Create
@@ -413,7 +409,7 @@ Here, the only additionally thing we are doing is adding the instance of the art
 Let's also add a new url:
 
 ```python
- url(r'^artists/(?P<pk>\d+)/edit$', views.artist_edit, name='artist_edit'),
+    path('artists/<int:pk>/edit', views.artist_edit, name='artist_edit'),
 ```
 
 ### You Do: Song Edit
@@ -433,7 +429,7 @@ We just need to find an artist, delete it, and then redirect to the index page.
 
 Let's add its url: 
 ```python
-url(r'^artists/(?P<pk>\d+)/delete$', views.artist_delete, name='artist_delete'),
+    path('artists/<int:pk>/delete', views.artist_delete, name='artist_delete'),
 ```
 
 ### You Do: Song Delete
@@ -443,3 +439,16 @@ Do the same thing for Songs!
 ## Bonus: Jinja
 
 Jinja is an awesome templating language for Django. It takes the place of Django Templates and adds some additional functionality. [Here](https://docs.djangoproject.com/en/2.0/topics/templates/#django.template.backends.jinja2.Jinja2) are the instructions for getting started with it.
+
+## Bonus: RegEx
+
+You can also use RegEx's for creating URLs in Django -- it can be really helpful for customizing your URLs. 
+
+We won't go over them in detail here, but [here](http://www.aivosto.com/vbtips/regex.html) is a link about them in more detail, and [here](https://www.google.com/search?q=regex+sanbox&oq=regex+sanbox&aqs=chrome..69i57j0l5.2240j0j7&sourceid=chrome&ie=UTF-8) is a sandbox to test them out.
+
+A quick primer on what will be helpful for creating urls:
+* `^` - beginning of the text
+* `$` - end of  text
+* `\d` - digit
+* `+` - required
+* `()` - captures part of a pattern

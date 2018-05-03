@@ -1,5 +1,14 @@
 # Django Views
 
+## Learning Objectives
+
+* Use Django to create views
+* Use routing in Django
+* Create templates using Django
+* Complete CRUD actions in Django
+
+## Framing
+
 In the previous lesson, we looked at how Django deals with data using models. Today we are going to look at how to actually display that data using views and templates!
 
 ## View Functions
@@ -24,7 +33,8 @@ Let's break this function down a bit. Let's first look at the declaration of a f
 On the third line, we see that we are rendering a template. The first argument is the request argument, the second is the template that we want to render, and the third is a dictionary with the data we want to send to the view. In this case, that's the artist QuerySet with the key 'artists'.
 
 ### You Do: Song List Function
-Write the view and the url to list all of the songs in the application. [Here](https://git.generalassemb.ly/ga-wdi-exercises/tunr_rails_many_to_many/blob/favorites-solution/app/views/songs/index.html.erb) is a link to the one in Rails!
+
+Write the view and the url to list all of the songs in the application.
 
 ## URLs
 
@@ -77,7 +87,9 @@ Now that we have two URLs, let's finish up by writing the templates to render ou
 
 ### Templates and Django Templating Language
 
-In previous classes, we've seen the templating languages ERB and Handlebars. Django also has its own! It looks a lot like Handlebars  in that it uses a bunch of curly braces. In order to duplicate what we have on the Rails version of Tunr, let's add the following code:
+In previous classes, we've seen the templating languages ERB and Handlebars. Django also has its own! It looks a lot like Handlebars  in that it uses a bunch of curly braces. In order to duplicate what we have on the 
+
+version of Tunr, let's add the following code:
 
 `templates/tunr/artist_list.html`
 ```html
@@ -95,7 +107,6 @@ Right now, we will keep our `href`'s blank until we have more routes. The Django
 
 
 ### You Do: Create List View for Songs
-Hint: [here](https://github.com/ga-wdi-exercises/tunr_rails_many_to_many/blob/favorites-solution/app/views/songs/index.html.erb) is the ERB one!
 
 
 ### We Do: Artist Show
@@ -148,7 +159,7 @@ First, we are going to use the name of the URL that we declared back in the `url
 
 ### You Do Song Show
 
-Hint: [here](https://github.com/ga-wdi-exercises/tunr_rails_many_to_many/blob/favorites-solution/app/views/songs/show.html.erb) is the Rails one! Also, link to this view in the `artist_detail` template. 
+Create the show page for the song. Also, link to this view in the `artist_detail` template. 
 
 ## We Do: base.html and CSS
 Right now we have two views, but they are really ugly. Let's do something about that! Let's first add a `base.html` file in the `tunr` views. It's at first going to look exactly like any other HTML base template we normally have, with one exception. We will have a block where we want our template to go. We will name this block content. We could have multiple blocks if we wanted. In that case they would be named other things -- say "title" or "header" instead of "content". 
@@ -367,7 +378,7 @@ Now let's make the template. Since we already declared the fields we want in our
 {% endblock %}
 ```
 
-We declare our form tags in html, we need to have our `csrf_token` -- like in rails, and then we can just insert our form like `{{ form.as_p }}`. The `.as_p` just formats the form nicely, you could also just do `{{ form }}` but it would be ugly. 
+We declare our form tags in html, we need to have our `csrf_token`, and then we can just insert our form like `{{ form.as_p }}`. The `.as_p` just formats the form nicely, you could also just do `{{ form }}` but it would be ugly. 
 
 We also need a submit button and then we are good! Errors are handled for us in-line!
 
@@ -406,9 +417,11 @@ Let's also add a new url:
 ```
 
 ### You Do: Song Edit
+
 Do the same thing for the song edit form!
 
 ### We Do: Artist Delete
+
 Delete functions are really simple as well.
 
 ```python
@@ -424,4 +437,8 @@ url(r'^artists/(?P<pk>\d+)/delete$', views.artist_delete, name='artist_delete'),
 ```
 
 ### You Do: Song Delete
+
 Do the same thing for Songs!
+
+## Bonus: Jinja
+

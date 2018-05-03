@@ -442,3 +442,4 @@ Do the same thing for Songs!
 
 ## Bonus: Jinja
 
+Jinja is an awesome templating language for Django. It takes the place of Django Templates and adds some additional functionality. [Here](https://docs.djangoproject.com/en/2.0/topics/templates/#django.template.backends.jinja2.Jinja2) are the instructions for getting started with it.

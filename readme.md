@@ -402,7 +402,7 @@ def artist_edit(request, pk):
             return redirect('artist_detail', pk=artist.pk)
     else:
         form = ArtistForm(instance=artist)
-    return render(request, 'tunr/artist_formƒ.html', {'form': form})
+    return render(request, 'tunr/artist_form.html', {'form': form})
 ```
 
 Here, the only additionally thing we are doing is adding the instance of the artist as a named parameter to our ArtistForm class. Voilà! We have an edit form now! We are rendering the same template and everything!

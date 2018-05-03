@@ -13,7 +13,7 @@ In the previous lesson, we looked at how Django deals with data using models. To
 
 ## View Functions
 
-Using the models from yesterday, let's create some views to display our application's data! Views are really similar to controllers in the other languages we have looked at so far. They pass data to our templates. 
+Using the models from this morning, let's create some views to display our application's data! Views are really similar to controllers in the other languages we have looked at so far. They pass data to our templates. 
 
 In your view file, you may see that `render` is already imported. This function is super helpful, and it does exactly what it sounds like - it renders views!
 
@@ -59,6 +59,7 @@ urlpatterns = [
 We are adding an import - `include` so that we can include other url files in our main one. We are doing this in order to make our app more modular -- again these "mini apps" in Django are supposed to plug into another parent app if needed.
 
 Let's write our urls for our app in another file called `tunr/urls.py`.
+
 
 tunr/urls.py
 ```python

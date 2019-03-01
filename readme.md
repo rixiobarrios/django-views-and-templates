@@ -273,6 +273,7 @@ Let's copy the css file from `tunr`:
 
 ```css
 tunr/static/css/tunr.css
+
 body {
     font-family: 'Helvetica Neue', sans-serif;
     max-width: 50em;
@@ -377,6 +378,7 @@ Finally, let's add this into our `base.html`:
 
 ```html
 <!-- tunr/templates/tunr/base.html -->
+
 {% load staticfiles %}
 <html>
     <head>
@@ -435,10 +437,12 @@ models as well](https://docs.djangoproject.com/en/1.11/ref/models/options/)).
 For clarification (and maybe interview) purposes, this is different than
 a Python `metaclass`. They deal with meta-programming in Python! 
 
-Now, in our `views.py` file, let's make a view function:
+Now, in our `views.py` file, let's import our ArtistForm class make a view function:
 
 ```python
 # tunr/views.py
+from .forms import ArtistForm
+
 def artist_create(request):
     if request.method == 'POST':
         form = ArtistForm(request.POST)
@@ -488,6 +492,21 @@ form nicely, you could also just do `{{ form }}` but it would be ugly.
 We also need a submit button and then we are good! Errors are handled for us
 in-line!
 
+In our `artist_list.html` file, update the `href` to include a path to our `artist_create` url:
+```html
+<!-- `tunr/templates/tunr/artist_list.html` -->
+<h2>Artists <a href="{% url 'artist_create' %}">(+)</a></h2>
+<ul>
+    {% for artist in artists %}
+        <li>
+            <a href="{% url 'artist_detail' pk=artist.pk %}">
+                {{ artist.name }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+```
+
 Finally, just add a url:
 
 ```python
@@ -527,6 +546,12 @@ Let's also add a new url:
 ```python
 # tunr/urls.py
     path('artists/<int:pk>/edit', views.artist_edit, name='artist_edit'),
+```
+
+Finally, update the `href` in `artist_detail.html` with a path to the `artist_edit` url:
+```html
+<!-- `tunr/templates/tunr/artist_detail.html` -->
+<h2>{{ artist.name }} <a href="{% url 'artist_edit' pk=artist.pk %}">(edit)</a></h2>
 ```
 
 ### You Do: Song Edit

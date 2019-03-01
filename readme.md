@@ -36,7 +36,7 @@ In your view file, you may see that `render` is already imported. This function
 is super helpful, and it does exactly what it sounds like - it renders views!
 
 ```python
-# views.py
+# tunr/views.py
 from django.shortcuts import render
 
 from .models import Artist, Song
@@ -74,6 +74,7 @@ Let's look at the existing `urls.py` in the `tunr_django` directory. In there,
 let's add a couple things. 
 
 ```python
+# tunr_django/urls.py
 from django.conf.urls import include
 from django.urls import path
 from django.contrib import admin
@@ -123,7 +124,7 @@ Django also has its own! It looks a lot like Handlebars  in that it uses a bunch
 of curly braces. In order to duplicate what we have on the version of Tunr, let's add the following code:
 
 ```html
-<!-- `templates/tunr/artist_list.html` -->
+<!-- `tunr/templates/tunr/artist_list.html` -->
 <h2>Artists <a href="">(+)</a></h2>
 <ul>
     {% for artist in artists %}
@@ -147,6 +148,7 @@ url's - which we will see later on today.
 Let's look at another route -- let's do show this time. 
 
 ```python
+# tunr/views.py
 def artist_detail(request, pk):
     artist = Artist.objects.get(id=pk)
     return render(request, 'tunr/artist_detail.html', {'artist': artist})
@@ -158,6 +160,7 @@ the function -- the primary key of the artist we want to display. Let's look at
 where that is coming from and hook up the URL to the view in `urls.py`.
 
 ```python
+# tunr/urls.py
     path('artists/<int:pk>', views.artist_detail, name='artist_detail'),
 ```
 
@@ -172,7 +175,7 @@ by convention.
 Finally, let's write our template.
 
 ```html
-<!-- /tunr/artist_detail.html -->
+<!-- tunr/templates/tunr/artist_detail.html -->
 <h2>{{ artist.name }} <a href="">(edit)</a></h2>
 <h4>{{ artist.nationality }}</h4>
 
@@ -198,6 +201,7 @@ let's insert a url.
 In the `href` attribute, let's add a URL tag. It looks like this:
 
 ```html
+<!-- tunr/templates/tunr/artist_list.html -->
 <a href="{% url 'artist_detail' pk=artist.pk %}">
     {{ artist.name }}
 </a>
@@ -223,6 +227,7 @@ case they would be named other things -- say "title" or "header" instead of
 "content". 
 
 ```html
+<!-- tunr/templates/tunr/base.html -->
 <html>
     <head>
         <title>Tunr</title>
@@ -242,6 +247,7 @@ case they would be named other things -- say "title" or "header" instead of
 Now let's hook this up to our templates -- which ends up looking like this:
 
 ```html
+<!-- tunr/templates/tunr/artist_list.html -->
 {% extends 'tunr/base.html' %}
 
 {% block content %}
@@ -266,6 +272,7 @@ within it.
 Let's copy the css file from `tunr`:
 
 ```css
+tunr/static/css/tunr.css
 body {
     font-family: 'Helvetica Neue', sans-serif;
     max-width: 50em;
@@ -369,6 +376,7 @@ a.no-fav {
 Finally, let's add this into our `base.html`:
 
 ```html
+<!-- tunr/templates/tunr/base.html -->
 {% load staticfiles %}
 <html>
     <head>

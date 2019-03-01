@@ -409,6 +409,7 @@ Python code!
 We do so like this:
 
 ```python
+# tunr/forms.py
 from django import forms
 from .models import Artist, Song
 
@@ -437,6 +438,7 @@ a Python `metaclass`. They deal with meta-programming in Python!
 Now, in our `views.py` file, let's make a view function:
 
 ```python
+# tunr/views.py
 def artist_create(request):
     if request.method == 'POST':
         form = ArtistForm(request.POST)
@@ -466,6 +468,7 @@ Now let's make the template. Since we already declared the fields we want in our
 form in the `forms.py` file, we can just do this:
 
 ```html
+<!-- tunr/templates/tunr/artist_form.html -->
 {% extends 'tunr/base.html' %}
 
 {% block content %}
@@ -488,6 +491,7 @@ in-line!
 Finally, just add a url:
 
 ```python
+# tunr/urls.py
     path('artists/new', views.artist_create, name='artist_create'),
 ```
 
@@ -501,6 +505,7 @@ Django makes forms really modular, all we have to do is add a new view function
 and a url to make our form edit instead of create:
 
 ```python
+# tunr/views.py
 def artist_edit(request, pk):
     artist = Artist.objects.get(pk=pk)
     if request.method == "POST":
@@ -520,6 +525,7 @@ now! We are rendering the same template and everything!
 Let's also add a new url:
 
 ```python
+# tunr/urls.py
     path('artists/<int:pk>/edit', views.artist_edit, name='artist_edit'),
 ```
 
@@ -532,6 +538,7 @@ Do the same thing for the song edit form!
 Delete functions are really simple as well.
 
 ```python
+# tunr/views.py
 def artist_delete(request, pk):
     Artist.objects.get(id=pk).delete()
     return redirect('artist_list')
@@ -540,6 +547,7 @@ We just need to find an artist, delete it, and then redirect to the index page.
 
 Let's add its url: 
 ```python
+# tunr/urls.py
     path('artists/<int:pk>/delete', views.artist_delete, name='artist_delete'),
 ```
 

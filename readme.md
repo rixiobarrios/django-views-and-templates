@@ -580,6 +580,7 @@ def song_create(request):
 ```
 
 </details>
+<details>
 <summary>Solution: Song Create URL in tunr/urls.py</summary>
 
 ```python
@@ -598,6 +599,14 @@ def song_create(request):
     <button type="submit" class="save btn btn-default">Save</button>
 </form>
 {% endblock %}
+```
+
+</details>
+<details>
+<summary>Solution: Artist Show Template Update</summary>
+
+```python
+<h3>Songs <a href="{% url 'song_create' %}">(+)</a></h3>
 ```
 
 </details>

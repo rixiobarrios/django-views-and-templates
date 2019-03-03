@@ -568,6 +568,8 @@ class SongForm(forms.ModelForm):
 <summary>Solution: Song Create View in tunr/views.py</summary>
 
 ```python
+from .forms import ArtistForm, SongForm
+
 def song_create(request):
     if request.method == 'POST':
         form = SongForm(request.POST)
@@ -584,7 +586,7 @@ def song_create(request):
 <summary>Solution: Song Create URL in tunr/urls.py</summary>
 
 ```python
-    path('songs/new', views.song_create, name='song_create'),
+    path('songs/new', views.song_create, name='song_create')
 ```
 
 </details>
@@ -611,13 +613,12 @@ def song_create(request):
 
 </details>
 
-### We Do: Artist Edit
+## We Do: Artist Edit
 
-Django makes forms really modular, all we have to do is add a new view function
-and a url to make our form edit instead of create:
+Django makes forms modular and reusable, so all we have to do is add a new view function and a url to make our form edit instead of create. Add the following code to the `views.py` file.
 
+**File: tunr/views.py**
 ```python
-# tunr/views.py
 def artist_edit(request, pk):
     artist = Artist.objects.get(pk=pk)
     if request.method == "POST":
@@ -630,26 +631,58 @@ def artist_edit(request, pk):
     return render(request, 'tunr/artist_form.html', {'form': form})
 ```
 
-Here, the only additionally thing we are doing is adding the instance of the
-artist as a named parameter to our ArtistForm class. Voilà! We have an edit form
-now! We are rendering the same template and everything!
+The only additionally thing we are doing here is adding the instance of the
+artist as a named parameter to our ArtistForm class. Voilà! We have an edit form now! We are rendering the same template and everything!
 
-Let's also add a new url:
+Next, add a new url:
 
+**File: tunr/urls.py**
 ```python
-# tunr/urls.py
     path('artists/<int:pk>/edit', views.artist_edit, name='artist_edit'),
 ```
 
 Finally, update the `href` in `artist_detail.html` with a path to the `artist_edit` url:
+
+**File: tunr/templates/tunr/artist_detail.html**
 ```html
-<!-- `tunr/templates/tunr/artist_detail.html` -->
 <h2>{{ artist.name }} <a href="{% url 'artist_edit' pk=artist.pk %}">(edit)</a></h2>
 ```
 
 ### You Do: Song Edit
 
 Do the same thing for the song edit form!
+
+<summary>Solution: Song Edit View in tunr/views.py</summary>
+
+```python
+def song_edit(request, pk):
+    song = Song.objects.get(pk=pk)
+    if request.method == "POST":
+        form = SongForm(request.POST, instance=song)
+        if form.is_valid():
+            artist = form.save()
+            return redirect('song_detail', pk=song.pk)
+    else:
+        form = SongForm(instance=song)
+    return render(request, 'tunr/song_form.html', {'form': form})
+```
+
+</details>
+<details>
+<summary>Solution: Song Edit URL in tunr/urls.py</summary>
+
+```python
+    path('songs/<int:pk>/edit', views.song_edit, name='song_edit')
+```
+
+</details>
+<summary>Solution: Song Show Template Update</summary>
+
+```python
+<h2>{{ song.title }} <a href="{% url 'song_edit' pk=song.pk %}">(edit)</a></h2>
+```
+
+</details>
 
 ### We Do: Artist Delete
 

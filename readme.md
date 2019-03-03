@@ -677,6 +677,7 @@ def song_edit(request, pk):
 ```
 
 </details>
+<details>
 <summary>Solution: Song Show Template Update</summary>
 
 ```python

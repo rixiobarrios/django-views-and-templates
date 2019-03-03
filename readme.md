@@ -55,8 +55,9 @@ Let's break the function down a bit:
 Write the view and the url to list all of the songs in the application.
 
 <details>
-<summary>Solution:</summary>
-**File: tunr/views.py**
+<b><summary>Solution: Song List Function</summary></b>
+File: tunr/views.py
+<br>
 ```python
 def song_list(request):
     songs = Song.objects.all()

@@ -1,42 +1,39 @@
 [![General Assembly Logo](https://camo.githubusercontent.com/1a91b05b8f4d44b5bbfb83abac2b0996d8e26c92/687474703a2f2f692e696d6775722e636f6d2f6b6538555354712e706e67)](https://generalassemb.ly/education/web-development-immersive)
 
-# Django Views
+# Django Views & Templates
 
-This lesson will build off of the lesson on models and migrations and wrap up
-everything we need to build basic apps with Django
+This lesson will build off of the lesson on Django models and migrations and wrap up everything we need to build basic applications with Django. Today, we are going to look at how to actually display our data using views and templates!
 
 ## Prerequisites
 
 * Python
-* Django models
-* Working with virtual environments
+* SQL & PostgreSQL
+* Django Models & Migrations
+* Virtual environments
 
-## Objectives
+## Learning Objectives
 
 By the end of this, developers should be able to:
 
 * Use Django to create views
 * Use routing in Django
 * Create templates using Django
-* Complete CRUD actions in Django
+* Complete CRUD functionality in Django
 
-## Introduction
+## Review
 
-In the previous lesson, we looked at how Django deals with data using models.
-Today we are going to look at how to actually display that data using views and
-templates!
+In the previous lesson, we learned how Django deals with data using models. We updated our `settings.py` file with the `DATABASE` and `INSTALLED APPS` we neeede. We utilized the `models.py` file to define our schema, set our data types and require constraints. We used our `admin.py` file to allow our superuser to perform CRUD on our application in the Django UI. There are a lot of other files here that we haven't used.
+
+### You Do: Django Application File Review (5 min)
+
+Take a few minutes to look through the files in our application, knowing what you learned in the last lesson. What have we done so far? What files will we need in today's lesson?
 
 ## View Functions
 
-Using the models from this morning, let's create some views to display our
-application's data! Views are really similar to controllers in the other
-languages we have looked at so far. They pass data to our templates. 
+Using the `Artist` and `Song` models that we have already implemented, let's create views to display our application's data! Views are really similar to controllers in the other languages we have looked at so far. They pass data to our templates. 
 
-In your view file, you may see that `render` is already imported. This function
-is super helpful, and it does exactly what it sounds like - it renders views!
-
+**File: tunr/views.py**
 ```python
-# tunr/views.py
 from django.shortcuts import render
 
 from .models import Artist, Song
@@ -46,35 +43,39 @@ def artist_list(request):
     return render(request, 'tunr/artist_list.html', {'artists': artists})
 ```
 
-Let's break this function down a bit. Let's first look at the declaration of
-a function. It looks like any other Python function! The only parameter to it is
-the request, which is what it sounds like. This is the HTTP Request dictionary.
-Then we are selecting all of the artists from the database into a QuerySet
-called artists. 
+On the first line, you will see that `render` is already imported. This function is super helpful, and it does exactly what it sounds like - it renders views! Next, we have imported our models, `Artist` and `Song`.
 
-On the third line, we see that we are rendering a template. The first argument
-is the request argument, the second is the template that we want to render, and
-the third is a dictionary with the data we want to send to the view. In this
-case, that's the artist QuerySet with the key 'artists'.
+Let's break the function down a bit:
+* The declaration of the function looks like any other Python function! The only parameter passed into it is the request, which is exactly what it sounds like. This represents the HTTP Request dictionary.
+* Next, we are selecting all of the artists from the database into a QuerySet called artists. 
+* On the third line, we see that we are rendering a template. The first argument is the request argument. The second is the template that we want to render, and the third is a dictionary (which is Python's equivalent to an object!) with the data we want to send to the template. In this case, we are sending the artist QuerySet with the key 'artists'.
 
 ### You Do: Song List Function
 
 Write the view and the url to list all of the songs in the application.
 
+<details>
+<summary>Solution: Song List Function</summary>
+
+```python
+def song_list(request):
+    songs = Song.objects.all()
+    return render(request, 'tunr/song_list.html', {'songs': songs})
+```
+
+</details>
+
 ## URLs
 
 Let's go ahead at how we will access these views -- through the URLs!
 
-In Django, the URL's deviate from the ones we've seen in other frameworks. They
-use stricter parameters where we have to specify the types of parameters. This
-eliminates a ton of the issues we've seen where we've had to reorder urls, but
+In Django, the URL's deviate from the ones we've seen in other frameworks. They use stricter parameters where we have to specify the types of parameters. This eliminates a ton of the issues we've seen where we've had to reorder urls, but
 it makes them a bit more complicated. 
 
-Let's look at the existing `urls.py` in the `tunr_django` directory. In there,
-let's add a couple things. 
+Let's look at the existing `urls.py` in the `tunr_django` directory. In there, let's add a couple things. 
 
+**File: tunr_django/urls.py**
 ```python
-# tunr_django/urls.py
 from django.conf.urls import include
 from django.urls import path
 from django.contrib import admin
@@ -85,15 +86,12 @@ urlpatterns = [
 ]
 ```
 
-We are adding an import - `include` so that we can include other url files in
-our main one. We are doing this in order to make our app more modular -- again
-these "mini apps" in Django are supposed to plug into another parent app if
-needed.
+On the first line, we are adding an import - `include` - so that we can include other url files in our main one. We are doing this in order to make our app more modular. These "mini apps" in Django are supposed to plug into another parent app if needed, and modularity makes this possible.
 
-Let's write our urls for our app in another file called `tunr/urls.py`.
+Next, Let's write our urls for our app in another file in the `tunr` directory. Create a file called called `urls.py` and paste the following code block into it.
 
+**File: tunr/urls.py**
 ```python
-# tunr/urls.py
 from django.urls import path
 from . import views
 
@@ -102,29 +100,39 @@ urlpatterns = [
 ]
 ```
 
-This is going to be the root URL. This is similar to the "/" URL in other
-languages -- it's a url that starts, ends, and has nothing in between. This way
-of doing URLs is great because they are super explicit. We no longer have to
-reorder or rename URLs in order to make them work!
+The path takes three arguments:
+* The first argument represents the URL path. Here, the artist list is going to be rendered in the root URL. Similar to the "/" URL in other languages, the path of the root URL starts, ends, and has nothing in between. In Django, we do not even need to include the `/`. This way of doing URLs is great because they are explicit. We no longer have to reorder or rename URLs in order to make them work!
+* The URL's second argument is the view function this route is going to match up with in the view file. So, at the root URL, the application will run the `artist_list` function we wrote in `views.py`.
+* Thirdly, we are going to use a named parameter. This is going to be referenced in our templates in order to link from one page to another.
 
-This URL's second argument is the view function this route is going to match up
-with. This will go in the view file. Thirdly, we are going to used a named
-parameter. This is going to be used in our templates in order to link from one
-page to another.
+### You Do: Song List URL
 
-#### You Do: Add a URL for the 'song_list' (2 mins)
+Add a URL to `tunr/urls.py` for the Song List.
 
-Now that we have two URLs, let's finish up by writing the templates to render
-our views!
+<details>
+<summary>Solution: Song List URL</summary>
 
-### Templates and Django Templating Language
+```python
+urlpatterns = [
+    path('', views.artist_list, name='artist_list'),
+    path('songs/', views.song_list, name='song_list')
+]
+```
 
-In previous classes, we've seen the templating languages ERB and Handlebars.
-Django also has its own! It looks a lot like Handlebars  in that it uses a bunch
-of curly braces. In order to duplicate what we have on the version of Tunr, let's add the following code:
+</details>
 
+
+## Templates and Django Templating Language
+
+Now that we have two URLs, let's finish up by writing the templates to render our views!
+
+In previous classes, we've used Handlebars as our primary templating language. Django has its own! It looks a lot like Handlebars in that it uses a bunch of curly braces. 
+
+In the `tunr` directory, add a `templates` directory and a `tunr` subdirectory. Here, create a file called `artist_list.html` and add the following code. In your browser, navigate to `localhost:8000` and see what appears!
+> NOTE: If you do not have your server running already, run the command `python manage.py runserver` in the virtual environment of your project folder in your terminal.
+
+**File: tunr/templates/tunr/artist_list.html**
 ```html
-<!-- `tunr/templates/tunr/artist_list.html` -->
 <h2>Artists <a href="">(+)</a></h2>
 <ul>
     {% for artist in artists %}
@@ -134,48 +142,56 @@ of curly braces. In order to duplicate what we have on the version of Tunr, let'
     {% endfor %}
 </ul>
 ```
+What's happening here?
+* Right now, we will keep our `href` values blank until we have more routes. We will eventually add paths to URLS here, as we create them throughout this lesson.
+* The Django template here loops through our QuerySet of artists, rendering the name of each.
+* The distinction between `{{}}` and `{%%}` usually is the difference between rendering or just running code (i.e. if's or for's). The one exception is with url's - which we will see later on today. 
 
-Right now, we will keep our `href`'s blank until we have more routes. The Django
-template here loops through our QuerySet of artists, rendering the name of each.
-The distinction between `{{}}` and `{%%}` usually is the difference between
-rendering or just running code (i.e. if's or for's). The one exception is with
-url's - which we will see later on today. 
+### You Do: Song List Template
 
-### You Do: Create List View for Songs
+Add a template file `song_list.html` to render the Song List. When you open the song list in your browser, what path will you use?
 
-### We Do: Artist Show
-
-Let's look at another route -- let's do show this time. 
+<details>
+<summary>Solution: Song List URL</summary>
 
 ```python
-# tunr/views.py
+<h2>Songs</h2>
+<ul>
+    {% for song in songs %}
+    <li>
+        <a href="">{{ song.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+```
+
+</details>
+
+
+## We Do: Artist Show
+
+Now that we have successfully rendered the artist and song lists, let's add another route. This time, let's add a show page for each of our two models starting with views. In the `tunr/views.py` file, add the following code:
+
+**File: tunr/views.py**
+```python
 def artist_detail(request, pk):
     artist = Artist.objects.get(id=pk)
     return render(request, 'tunr/artist_detail.html', {'artist': artist})
 ```
 
-This function is really similar to the list view, this time we just are
-selecting one artist instead of all of them.  We receive a second parameter to
-the function -- the primary key of the artist we want to display. Let's look at
-where that is coming from and hook up the URL to the view in `urls.py`.
+This function is similar to the list view. This time, we are selecting one artist instead of all of them. To do this, we receive a second parameter to the function, the primary key of the artist we want to display. Let's look at where that is coming from and connect the URL to the view in `urls.py`.
 
+**File: tunr/urls.py**
 ```python
-# tunr/urls.py
     path('artists/<int:pk>', views.artist_detail, name='artist_detail'),
 ```
 
-With the show url, we get to see the beauty of RegEx's for Django's url's. This
-Regex is allowing us to access a variable called `pk` from the URL. The
-parentheses and P say that everything within those parentheses is a "capture
-group". The `d` is saying that the `pk` variable must be a number (using d for
-digit). In Django we use `pk` as an alternate term for `id`. In the database,
-primary keys are the unique ids for each row, and Django adopts that terminology
-by convention.
+In the show url we have added `<int:pk>` to the path in the first argument. In Django, we use `pk` as an alternate term for `id`. In the database, primary keys are the unique ids for each row, and Django adopts that terminology by convention. The second argument directs us to the `artist_detail` function in `views.py`. The third argument used a named parameter to be referenced in our templates.
 
 Finally, let's write our template.
 
+**File: tunr/templates/tunr/artist_detail.html**
 ```html
-<!-- tunr/templates/tunr/artist_detail.html -->
 <h2>{{ artist.name }} <a href="">(edit)</a></h2>
 <h4>{{ artist.nationality }}</h4>
 
@@ -191,43 +207,83 @@ Finally, let's write our template.
 </ul>
 ```
 
-Here, we are showing some attributes of the artist object, then we are looping
-through the songs attached to that artist.
+Here, we are showing some attributes of the artist object, then we are looping through the songs attached to that artist.
 
-Let's take a step back to our `artist_list.html`.  Before, we omitted the links
-to to the next page, but let's look at linking to our show page now. On line 5,
-let's insert a url.
+Let's take a step back to our `artist_list.html`.  Before, we omitted the links to to the next page. Now that we have created our show page, let's add its URL tag to the `href` attribute.
 
-In the `href` attribute, let's add a URL tag. It looks like this:
+In the `href` attribute, let's add a URL tag. First, we use the name of the URL that we declared back in the `url` file. Then we need to pass the primary key of that artist into that url. Update your `artist_detail.html` file with the following code:
 
+**File: tunr/templates/tunr/artist_list.html**
 ```html
-<!-- tunr/templates/tunr/artist_list.html -->
 <a href="{% url 'artist_detail' pk=artist.pk %}">
     {{ artist.name }}
 </a>
 ```
 
-First, we are going to use the name of the URL that we declared back in the
-`url` file. Then we need to pass the primary key of that artist into that url.
-We do so like the above.
+### You Do: Song Show
 
-### You Do Song Show
+Create the show page for the song. Also, link to this view in both the
+`artist_detail` and `song_list` templates.
 
-Create the show page for the song. Also, link to this view in the
-`artist_detail` template. 
+<details>
+<summary>Solution: Song Show View in tunr/views.py</summary>
+
+```python
+def song_detail(request, pk):
+    song = Song.objects.get(id=pk)
+    return render(request, 'tunr/song_detail.html', {'song': song})
+```
+
+</details>
+<details>
+<summary>Solution: Song Show URL in tunr/urls.py</summary>
+
+```python
+    path('songs/<int:pk>', views.song_detail, name='song_detail')
+```
+
+</details>
+<details>
+<summary>Solution: Song Show Template in tunr/templates/tunr/song_detail.html</summary>
+
+```python
+<h2>{{ song.title }} <a href="">(edit)</a></h2>
+<h3>By: {{ song.artist.name }}</h3>
+
+Album: {{ song.album }}
+```
+
+</details>
+<details>
+<summary>Solution: Artist Show Template Update</summary>
+
+```python
+<a href="{% url 'song_detail' pk=song.pk %}">
+    {{ song.title }}-{{ song.album }}
+</a>
+```
+
+</details>
+<details>
+<summary>Solution: Song List Template Update</summary>
+
+```python
+<a href="{% url 'song_detail' pk=song.pk %}">
+    {{ song.title }}
+</a>
+```
+
+</details>
+
 
 ## We Do: base.html and CSS
 
-Right now we have two views, but they are really ugly. Let's do something about
-that! Let's first add a `base.html` file in the `tunr` views. It's at first
-going to look exactly like any other HTML base template we normally have, with
-one exception. We will have a block where we want our template to go. We will
-name this block content. We could have multiple blocks if we wanted. In that
-case they would be named other things -- say "title" or "header" instead of
-"content". 
+Right now we have two views, but they are really ugly. Let's do something about that! Add a `base.html` file in the `tunr` templates. It's going to look exactly like any other HTML base template we normally have, with one exception: we will have a block where we want our template to go. We will name this block content.\
+> NOTE: This is very similar to the {{{body}}} tag we used in the `layout.hbs` file in Handlebars!
+> NOTE: We could have multiple blocks if we wanted. In that case they would be named other things -- say "title" or "header" instead of "content". 
 
+**File: tunr/templates/tunr/base.html**
 ```html
-<!-- tunr/templates/tunr/base.html -->
 <html>
     <head>
         <title>Tunr</title>
@@ -244,10 +300,10 @@ case they would be named other things -- say "title" or "header" instead of
 </html>
 ```
 
-Now let's hook this up to our templates -- which ends up looking like this:
+In order to use our `base.html` file as a boilerplate for the rest of our templates, we must add some code to each of our template files.
 
+**File: tunr/templates/tunr/artist_list.html**
 ```html
-<!-- tunr/templates/tunr/artist_list.html -->
 {% extends 'tunr/base.html' %}
 
 {% block content %}
@@ -262,18 +318,12 @@ Now let's hook this up to our templates -- which ends up looking like this:
 {% endblock %}
 ```
 
-Each template is going to be extending the base, and our current content will go
-with in the `content` block of code. 
+Each template is going to extend the base by adding `{% extends 'tunr/base.html' %}` to the beginning of the file. The content between `{% block content %}` and `{% endblock %}` will render in place of the content block in the `base.html` file. 
 
-Now let's add styling. By default, Django is going to host our static files in
-the `static` folder. Let's add a `css` subdirectory, and a `tunr.css` file
-within it.
+Next, let's add styling. By default, Django is going to host our static files in the `static` folder. Add a `static` directory, a `css` subdirectory, and a `tunr.css` file to the `tunr` directory. Copy the following css code into `tunr.css`:
 
-Let's copy the css file from `tunr`:
-
+**File: tunr/static/css/tunr.css**
 ```css
-tunr/static/css/tunr.css
-
 body {
     font-family: 'Helvetica Neue', sans-serif;
     max-width: 50em;
@@ -374,11 +424,10 @@ a.no-fav {
 }
 ```
 
-Finally, let's add this into our `base.html`:
+Finally, add the following code into `base.html`:
 
+**File: tunr/templates/tunr/base.html**
 ```html
-<!-- tunr/templates/tunr/base.html -->
-
 {% load staticfiles %}
 <html>
     <head>
@@ -397,21 +446,17 @@ Finally, let's add this into our `base.html`:
 </html>
 ```
 
-On line 1, we are telling Django to load the static files onto the current page.
-Then in the `link` tag, we can refer to our static file like the above. This may
-seem a bit messy, but it really helps when you deploy your app, especially if
-you want to host your static files on a separate server. 
+Let's break this down:
+* On the first line, we are telling Django to load the static files onto the current page.
+* Then in the `link` tag, we can refer to our stylesheet and include our static `tunr.css` file. This is essentially the same as requiring any stylesheet in an html boilerplate.
+* This may seem a bit messy, but it really helps when you deploy your app, especially if you want to host your static files on a separate server. 
 
-### We Do: Artist Create
+## We Do: Artist Create
 
-So far we've just shown our artists. Let's now create a new one! First, let's
-make a file called `forms.py`. This is going to be where we make our forms using
-Python code! 
+So far we've just shown our artists. Let's now create a new one! First, create a file called `forms.py` in the `tunr` directory. This is going to be where we make our forms using Python code.
 
-We do so like this:
-
+**File: tunr/forms.py**
 ```python
-# tunr/forms.py
 from django import forms
 from .models import Artist, Song
 
@@ -422,25 +467,23 @@ class ArtistForm(forms.ModelForm):
         fields = ('name', 'photo_url', 'nationality',)
 
 ```
+Let's break this down:
+* First, we will create a class to house our form.
+* Inside of it we will declare another class. The `Meta` class within the form contains meta data we have to describe the form. In this case, the model attached to the form and the fields we want to include in our form.
+* Note that the fields are in parenthesis instead of square brackets - they are in a tuple instead of a list! Tuples are like lists but they are immutable. They can't be changed.
 
-First, we will create a class to house our form. Inside of it we will declare
-another class. The Meta class within the form contains meta data we have to
-describe the form. In this case, the model attached to the form and the fields
-we want to include in our form. Note that the fields are in parenthesis instead
-of square brackets - they are in a tuple instead of a list! Tuples are like
-lists but they are immutable -- they can't be changed.
+The rationale for the `Meta` class within the class is that it contains information describing the class that isn't specific to a particular instance, rather it just contains configuration details.
 
-The rationale for the `Meta` class within the class is that it contains
-information describing the class that isn't specific to a particular instance,
-rather it just contains configuration details (bonus: [you can do this for
-models as well](https://docs.djangoproject.com/en/1.11/ref/models/options/)).
-For clarification (and maybe interview) purposes, this is different than
-a Python `metaclass`. They deal with meta-programming in Python! 
+(Bonus: [You can do this for models as well](https://docs.djangoproject.com/en/1.11/ref/models/options/)).
 
-Now, in our `views.py` file, let's import our ArtistForm class make a view function:
+For clarification (and maybe interview) purposes, this is different than a Python `metaclass`. They deal with meta-programming in Python!
 
+In our `views.py` file, let's add functionality to create an artist:
+
+**File: tunr/views.py**
 ```python
-# tunr/views.py
+from django.shortcuts import render, redirect
+
 from .forms import ArtistForm
 
 def artist_create(request):
@@ -454,25 +497,23 @@ def artist_create(request):
     return render(request, 'tunr/artist_form.html', {'form': form})
 ```
 
-We must also change the first line of our file to `from django.shortcuts import
-render, redirect` so that we have redirects available to us.
+What happening here?
+* We must change the first line of our file to `from django.shortcuts import render, redirect` so that we have redirects available to us.
+* We must import our ArtistForm class
+* This function is a little bit different than what we have seen so far. Instead of having different functions that handle different types of requests, we can handle multiple types within the same function in Django. So, in the first line we check to see if our request is a post request. If it is, we will fill in our form with data from the post request, and check if the form is valid. If it is valid, then we will save the new artist and redirect to it's show page. If it errors, then we will render the artist form with those errors. 
+* If instead the request method is 'get', we just create an instance of the form without any pre-filled data, and then we will render the form template.
 
-Let's break down this function: instead of having different functions that
-handle different types of requests, we can handle multiple types within the same
-function in Django. So, in the first line we check to see if our request is
-a post request. If it is, we will fill in our form with data from the post
-request, check if the form is valid, if it is, then we will save the new artist
-and redirect to it's detail view. If it errors, then we will render the artist
-form with those errors. 
+Next, add a url:
 
-If instead the request method is 'get', we just create an instance of the form
-without any pre-filled data, and then we will render the form template.
+**File: tunr/urls.py**
+```python
+    path('artists/new', views.artist_create, name='artist_create'),
+```
 
-Now let's make the template. Since we already declared the fields we want in our
-form in the `forms.py` file, we can just do this:
+Finally, let's make the template. Since we already declared the fields we want in our form in the `forms.py` file, we can just do this:
 
+**File: tunr/templates/tunr/artist_form.html**
 ```html
-<!-- tunr/templates/tunr/artist_form.html -->
 {% extends 'tunr/base.html' %}
 
 {% block content %}
@@ -485,16 +526,12 @@ form in the `forms.py` file, we can just do this:
 {% endblock %}
 ```
 
-We declare our form tags in html, we need to have our `csrf_token`, and then we
-can just insert our form like `{{ form.as_p }}`. The `.as_p` just formats the
-form nicely, you could also just do `{{ form }}` but it would be ugly. 
+When we declare our form tags in html we need to have our `csrf_token`, and then we can just insert our form like `{{ form.as_p }}`. The `.as_p` just formats the form nicely, you could also just do `{{ form }}` but it would be ugly. We also need a submit button and then we are good! Errors are handled for us in-line!
 
-We also need a submit button and then we are good! Errors are handled for us
-in-line!
+In our `artist_list.html` file, update the `href` to include a path to our `artist_create` url.
 
-In our `artist_list.html` file, update the `href` to include a path to our `artist_create` url:
+**File: tunr/templates/tunr/artist_list.html**
 ```html
-<!-- `tunr/templates/tunr/artist_list.html` -->
 <h2>Artists <a href="{% url 'artist_create' %}">(+)</a></h2>
 <ul>
     {% for artist in artists %}
@@ -507,24 +544,81 @@ In our `artist_list.html` file, update the `href` to include a path to our `arti
 </ul>
 ```
 
-Finally, just add a url:
-
-```python
-# tunr/urls.py
-    path('artists/new', views.artist_create, name='artist_create'),
-```
 
 ### You Do: Song Create
 
 Your turn! Do the same as above but for the song creation form.
 
-### We Do: Artist Edit
-
-Django makes forms really modular, all we have to do is add a new view function
-and a url to make our form edit instead of create:
+<details>
+<summary>Solution: Song Create Form in tunr/forms.py</summary>
 
 ```python
-# tunr/views.py
+from django import forms
+from .models import Artist, Song
+
+class SongForm(forms.ModelForm):
+    
+    class Meta:
+        model = Song
+        fields = ('title', 'album', 'preview_url', 'artist',)
+```
+
+</details>
+<details>
+<summary>Solution: Song Create View in tunr/views.py</summary>
+
+```python
+from .forms import ArtistForm, SongForm
+
+def song_create(request):
+    if request.method == 'POST':
+        form = SongForm(request.POST)
+        if form.is_valid():
+            song = form.save()
+            return redirect('song_detail', pk=song.pk)
+    else:
+        form = SongForm()
+    return render(request, 'tunr/song_form.html', {'form': form})
+```
+
+</details>
+<details>
+<summary>Solution: Song Create URL in tunr/urls.py</summary>
+
+```python
+    path('songs/new', views.song_create, name='song_create')
+```
+
+</details>
+<details>
+<summary>Solution: Song Create Template in tunr/templates/tunr/song_form.html</summary>
+
+```python
+{% extends 'tunr/base.html' %} {% block content %}
+<h1>New Song</h1>
+<form method="POST" class="song-form">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit" class="save btn btn-default">Save</button>
+</form>
+{% endblock %}
+```
+
+</details>
+<details>
+<summary>Solution: Artist Show Template Update</summary>
+
+```python
+<h3>Songs <a href="{% url 'song_create' %}">(+)</a></h3>
+```
+
+</details>
+
+## We Do: Artist Edit
+
+Django makes forms modular and reusable, so all we have to do is add a new view function and a url to make our form edit instead of create. Add the following code to the `views.py` file.
+
+**File: tunr/views.py**
+```python
 def artist_edit(request, pk):
     artist = Artist.objects.get(pk=pk)
     if request.method == "POST":
@@ -537,20 +631,20 @@ def artist_edit(request, pk):
     return render(request, 'tunr/artist_form.html', {'form': form})
 ```
 
-Here, the only additionally thing we are doing is adding the instance of the
-artist as a named parameter to our ArtistForm class. Voilà! We have an edit form
-now! We are rendering the same template and everything!
+The only additionally thing we are doing here is adding the instance of the
+artist as a named parameter to our ArtistForm class. Voilà! We have an edit form now! We are rendering the same template and everything!
 
-Let's also add a new url:
+Next, add a new url:
 
+**File: tunr/urls.py**
 ```python
-# tunr/urls.py
     path('artists/<int:pk>/edit', views.artist_edit, name='artist_edit'),
 ```
 
 Finally, update the `href` in `artist_detail.html` with a path to the `artist_edit` url:
+
+**File: tunr/templates/tunr/artist_detail.html**
 ```html
-<!-- `tunr/templates/tunr/artist_detail.html` -->
 <h2>{{ artist.name }} <a href="{% url 'artist_edit' pk=artist.pk %}">(edit)</a></h2>
 ```
 
@@ -558,27 +652,83 @@ Finally, update the `href` in `artist_detail.html` with a path to the `artist_ed
 
 Do the same thing for the song edit form!
 
-### We Do: Artist Delete
+<details>
+<summary>Solution: Song Edit View in tunr/views.py</summary>
+
+```python
+def song_edit(request, pk):
+    song = Song.objects.get(pk=pk)
+    if request.method == "POST":
+        form = SongForm(request.POST, instance=song)
+        if form.is_valid():
+            artist = form.save()
+            return redirect('song_detail', pk=song.pk)
+    else:
+        form = SongForm(instance=song)
+    return render(request, 'tunr/song_form.html', {'form': form})
+```
+
+</details>
+<details>
+<summary>Solution: Song Edit URL in tunr/urls.py</summary>
+
+```python
+    path('songs/<int:pk>/edit', views.song_edit, name='song_edit')
+```
+
+</details>
+<details>
+<summary>Solution: Song Show Template Update</summary>
+
+```python
+<h2>{{ song.title }} <a href="{% url 'song_edit' pk=song.pk %}">(edit)</a></h2>
+```
+
+</details>
+
+
+## We Do: Artist Delete
 
 Delete functions are really simple as well.
 
+**File: tunr/views.py**
 ```python
-# tunr/views.py
 def artist_delete(request, pk):
     Artist.objects.get(id=pk).delete()
     return redirect('artist_list')
 ```
+
 We just need to find an artist, delete it, and then redirect to the index page.
 
-Let's add its url: 
+Let's add the url:
+
+**File: tunr/urls.py**
 ```python
-# tunr/urls.py
     path('artists/<int:pk>/delete', views.artist_delete, name='artist_delete'),
 ```
 
 ### You Do: Song Delete
 
 Do the same thing for Songs!
+
+<details>
+<summary>Solution: Song Delete View in tunr/views.py</summary>
+
+```python
+def song_delete(request, pk):
+    Song.objects.get(id=pk).delete()
+    return redirect('song_list')
+```
+
+</details>
+<details>
+<summary>Solution: Song Delete URL in tunr/urls.py</summary>
+
+```python
+    path('songs/<int:pk>/delete', views.song_delete, name='song_delete')
+```
+
+</details>
 
 ## Bonus: Jinja
 

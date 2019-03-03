@@ -69,16 +69,13 @@ def song_list(request):
 
 Let's go ahead at how we will access these views -- through the URLs!
 
-In Django, the URL's deviate from the ones we've seen in other frameworks. They
-use stricter parameters where we have to specify the types of parameters. This
-eliminates a ton of the issues we've seen where we've had to reorder urls, but
+In Django, the URL's deviate from the ones we've seen in other frameworks. They use stricter parameters where we have to specify the types of parameters. This eliminates a ton of the issues we've seen where we've had to reorder urls, but
 it makes them a bit more complicated. 
 
-Let's look at the existing `urls.py` in the `tunr_django` directory. In there,
-let's add a couple things. 
+Let's look at the existing `urls.py` in the `tunr_django` directory. In there, let's add a couple things. 
 
+**File: tunr_django/urls.py**
 ```python
-# tunr_django/urls.py
 from django.conf.urls import include
 from django.urls import path
 from django.contrib import admin
@@ -89,15 +86,12 @@ urlpatterns = [
 ]
 ```
 
-We are adding an import - `include` so that we can include other url files in
-our main one. We are doing this in order to make our app more modular -- again
-these "mini apps" in Django are supposed to plug into another parent app if
-needed.
+On the first line, we are adding an import - `include` - so that we can include other url files in our main one. We are doing this in order to make our app more modular. These "mini apps" in Django are supposed to plug into another parent app if needed, and modularity makes this possible.
 
-Let's write our urls for our app in another file called `tunr/urls.py`.
+Next, Let's write our urls for our app in another file in the `tunr` directory. Create a file called called `urls.py` and paste the following code block into it.
 
+**File: tunr/urls.py**
 ```python
-# tunr/urls.py
 from django.urls import path
 from . import views
 
@@ -106,20 +100,28 @@ urlpatterns = [
 ]
 ```
 
-This is going to be the root URL. This is similar to the "/" URL in other
-languages -- it's a url that starts, ends, and has nothing in between. This way
-of doing URLs is great because they are super explicit. We no longer have to
-reorder or rename URLs in order to make them work!
+The path takes three arguments:
+* The first argument represents the URL path. Here, the artist list is going to be rendered in the root URL. Similar to the "/" URL in other languages, the path of the root URL starts, ends, and has nothing in between. In Django, we do not even need to include the `/`. This way of doing URLs is great because they are explicit. We no longer have to reorder or rename URLs in order to make them work!
+* The URL's second argument is the view function this route is going to match up with in the view file. So, at the root URL, the application will run the `artist_list` function we wrote in `views.py`.
+* Thirdly, we are going to use a named parameter. This is going to be referenced in our templates in order to link from one page to another.
 
-This URL's second argument is the view function this route is going to match up
-with. This will go in the view file. Thirdly, we are going to used a named
-parameter. This is going to be used in our templates in order to link from one
-page to another.
+### You Do: Song List URL
 
-#### You Do: Add a URL for the 'song_list' (2 mins)
+Add a URL to `tunr/urls.py` for the Song List.
 
-Now that we have two URLs, let's finish up by writing the templates to render
-our views!
+<details>
+<summary>Solution: Song List URL</summary>
+
+```python
+urlpatterns = [
+    path('', views.artist_list, name='artist_list'),
+    path('songs/', views.song_list, name='song_list')
+]
+```
+
+</details>
+
+Now that we have two URLs, let's finish up by writing the templates to render our views!
 
 ### Templates and Django Templating Language
 

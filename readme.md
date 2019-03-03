@@ -244,7 +244,7 @@ def song_detail(request, pk):
 
 </details>
 <details>
-<summary>Solution: Song Show Template in tunr/templates/tunr/song_detail.py</summary>
+<summary>Solution: Song Show Template in tunr/templates/tunr/song_detail.html</summary>
 
 ```python
 <h2>{{ song.title }} <a href="">(edit)</a></h2>
@@ -278,16 +278,12 @@ Album: {{ song.album }}
 
 ## We Do: base.html and CSS
 
-Right now we have two views, but they are really ugly. Let's do something about
-that! Let's first add a `base.html` file in the `tunr` views. It's at first
-going to look exactly like any other HTML base template we normally have, with
-one exception. We will have a block where we want our template to go. We will
-name this block content. We could have multiple blocks if we wanted. In that
-case they would be named other things -- say "title" or "header" instead of
-"content". 
+Right now we have two views, but they are really ugly. Let's do something about that! Add a `base.html` file in the `tunr` templates. It's going to look exactly like any other HTML base template we normally have, with one exception: we will have a block where we want our template to go. We will name this block content.\
+> NOTE: This is very similar to the {{{body}}} tag we used in the `layout.hbs` file in Handlebars!
+> NOTE: We could have multiple blocks if we wanted. In that case they would be named other things -- say "title" or "header" instead of "content". 
 
+**File: tunr/templates/tunr/base.html**
 ```html
-<!-- tunr/templates/tunr/base.html -->
 <html>
     <head>
         <title>Tunr</title>
@@ -304,10 +300,10 @@ case they would be named other things -- say "title" or "header" instead of
 </html>
 ```
 
-Now let's hook this up to our templates -- which ends up looking like this:
+In order to use our `base.html` file as a boilerplate for the rest of our templates, we must add some code to each of our template files.
 
+**File: tunr/templates/tunr/artist_list.html**
 ```html
-<!-- tunr/templates/tunr/artist_list.html -->
 {% extends 'tunr/base.html' %}
 
 {% block content %}
@@ -322,18 +318,12 @@ Now let's hook this up to our templates -- which ends up looking like this:
 {% endblock %}
 ```
 
-Each template is going to be extending the base, and our current content will go
-with in the `content` block of code. 
+Each template is going to extend the base by adding `{% extends 'tunr/base.html' %}` to the beginning of the file. The content between `{% block content %}` and `{% endblock %}` will render in place of the content block in the `base.html` file. 
 
-Now let's add styling. By default, Django is going to host our static files in
-the `static` folder. Let's add a `css` subdirectory, and a `tunr.css` file
-within it.
+Next, let's add styling. By default, Django is going to host our static files in the `static` folder. Add a `static` directory, a `css` subdirectory, and a `tunr.css` file to the `tunr` directory. Copy the following css code into `tunr.css`:
 
-Let's copy the css file from `tunr`:
-
+**File: tunr/static/css/tunr.css**
 ```css
-tunr/static/css/tunr.css
-
 body {
     font-family: 'Helvetica Neue', sans-serif;
     max-width: 50em;
@@ -434,11 +424,10 @@ a.no-fav {
 }
 ```
 
-Finally, let's add this into our `base.html`:
+Finally, add the following code into `base.html`:
 
+**File: tunr/templates/tunr/base.html**
 ```html
-<!-- tunr/templates/tunr/base.html -->
-
 {% load staticfiles %}
 <html>
     <head>
@@ -457,12 +446,12 @@ Finally, let's add this into our `base.html`:
 </html>
 ```
 
-On line 1, we are telling Django to load the static files onto the current page.
-Then in the `link` tag, we can refer to our static file like the above. This may
-seem a bit messy, but it really helps when you deploy your app, especially if
-you want to host your static files on a separate server. 
+Let's break this down:
+* On the first line, we are telling Django to load the static files onto the current page.
+* Then in the `link` tag, we can refer to our stylesheet and include our static `tunr.css` file. This is essentially the same as requiring any stylesheet in an html boilerplate.
+* This may seem a bit messy, but it really helps when you deploy your app, especially if you want to host your static files on a separate server. 
 
-### We Do: Artist Create
+## We Do: Artist Create
 
 So far we've just shown our artists. Let's now create a new one! First, let's
 make a file called `forms.py`. This is going to be where we make our forms using

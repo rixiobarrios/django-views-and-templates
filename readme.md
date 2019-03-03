@@ -149,7 +149,7 @@ What's happening here?
 
 ### You Do: Song List Template
 
-Add a template file `song_list.html` to render the Song List.
+Add a template file `song_list.html` to render the Song List. When you open the song list in your browser, what path will you use?
 
 <details>
 <summary>Solution: Song List URL</summary>
@@ -170,37 +170,28 @@ Add a template file `song_list.html` to render the Song List.
 
 ## We Do: Artist Show
 
-Let's look at another route -- let's do show this time. 
+Now that we have successfully rendered the artist and song lists, let's add another route. This time, let's add a show page for each of our two models starting with views. In the `tunr/views.py` file, add the following code:
 
+**File: tunr/views.py**
 ```python
-# tunr/views.py
 def artist_detail(request, pk):
     artist = Artist.objects.get(id=pk)
     return render(request, 'tunr/artist_detail.html', {'artist': artist})
 ```
 
-This function is really similar to the list view, this time we just are
-selecting one artist instead of all of them.  We receive a second parameter to
-the function -- the primary key of the artist we want to display. Let's look at
-where that is coming from and hook up the URL to the view in `urls.py`.
+This function is similar to the list view. This time, we are selecting one artist instead of all of them. To do this, we receive a second parameter to the function, the primary key of the artist we want to display. Let's look at where that is coming from and connect the URL to the view in `urls.py`.
 
+**File: tunr/urls.py**
 ```python
-# tunr/urls.py
     path('artists/<int:pk>', views.artist_detail, name='artist_detail'),
 ```
 
-With the show url, we get to see the beauty of RegEx's for Django's url's. This
-Regex is allowing us to access a variable called `pk` from the URL. The
-parentheses and P say that everything within those parentheses is a "capture
-group". The `d` is saying that the `pk` variable must be a number (using d for
-digit). In Django we use `pk` as an alternate term for `id`. In the database,
-primary keys are the unique ids for each row, and Django adopts that terminology
-by convention.
+In the show url we have added `<int:pk>` to the path in the first argument. In Django, we use `pk` as an alternate term for `id`. In the database, primary keys are the unique ids for each row, and Django adopts that terminology by convention. The second argument directs us to the `artist_detail` function in `views.py`. The third argument used a named parameter to be referenced in our templates.
 
 Finally, let's write our template.
 
+**File: tunr/templates/tunr/artist_detail.html**
 ```html
-<!-- tunr/templates/tunr/artist_detail.html -->
 <h2>{{ artist.name }} <a href="">(edit)</a></h2>
 <h4>{{ artist.nationality }}</h4>
 
@@ -216,30 +207,74 @@ Finally, let's write our template.
 </ul>
 ```
 
-Here, we are showing some attributes of the artist object, then we are looping
-through the songs attached to that artist.
+Here, we are showing some attributes of the artist object, then we are looping through the songs attached to that artist.
 
-Let's take a step back to our `artist_list.html`.  Before, we omitted the links
-to to the next page, but let's look at linking to our show page now. On line 5,
-let's insert a url.
+Let's take a step back to our `artist_list.html`.  Before, we omitted the links to to the next page. Now that we have created our show page, let's add its URL tag to the `href` attribute.
 
-In the `href` attribute, let's add a URL tag. It looks like this:
+In the `href` attribute, let's add a URL tag. First, we use the name of the URL that we declared back in the `url` file. Then we need to pass the primary key of that artist into that url. Update your `artist_detail.html` file with the following code:
 
+**File: tunr/templates/tunr/artist_list.html**
 ```html
-<!-- tunr/templates/tunr/artist_list.html -->
 <a href="{% url 'artist_detail' pk=artist.pk %}">
     {{ artist.name }}
 </a>
 ```
 
-First, we are going to use the name of the URL that we declared back in the
-`url` file. Then we need to pass the primary key of that artist into that url.
-We do so like the above.
+### You Do: Song Show
 
-### You Do Song Show
+Create the show page for the song. Also, link to this view in both the
+`artist_detail` and `song_list` templates.
 
-Create the show page for the song. Also, link to this view in the
-`artist_detail` template. 
+<details>
+<summary>Solution: Song Show View in tunr/views.py</summary>
+
+```python
+def song_detail(request, pk):
+    song = Song.objects.get(id=pk)
+    return render(request, 'tunr/song_detail.html', {'song': song})
+```
+
+</details>
+<details>
+<summary>Solution: Song Show URL in tunr/urls.py</summary>
+
+```python
+    path('songs/<int:pk>', views.song_detail, name='song_detail')
+```
+
+</details>
+<details>
+<summary>Solution: Song Show Template in tunr/templates/tunr/song_detail.py</summary>
+
+```python
+<h2>{{ song.title }} <a href="">(edit)</a></h2>
+<h3>By: {{ song.artist.name }}</h3>
+
+Album: {{ song.album }}
+```
+
+</details>
+<details>
+<summary>Solution: Artist Show Template Update</summary>
+
+```python
+<a href="{% url 'song_detail' pk=song.pk %}">
+    {{ song.title }}-{{ song.album }}
+</a>
+```
+
+</details>
+<details>
+<summary>Solution: Song List Template Update</summary>
+
+```python
+<a href="{% url 'song_detail' pk=song.pk %}">
+    {{ song.title }}
+</a>
+```
+
+</details>
+
 
 ## We Do: base.html and CSS
 

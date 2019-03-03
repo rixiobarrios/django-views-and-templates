@@ -1,42 +1,39 @@
 [![General Assembly Logo](https://camo.githubusercontent.com/1a91b05b8f4d44b5bbfb83abac2b0996d8e26c92/687474703a2f2f692e696d6775722e636f6d2f6b6538555354712e706e67)](https://generalassemb.ly/education/web-development-immersive)
 
-# Django Views
+# Django Views & Templates
 
-This lesson will build off of the lesson on models and migrations and wrap up
-everything we need to build basic apps with Django
+This lesson will build off of the lesson on Django models and migrations and wrap up everything we need to build basic applications with Django. Today, we are going to look at how to actually display our data using views and templates!
 
 ## Prerequisites
 
 * Python
-* Django models
-* Working with virtual environments
+* SQL & PostgreSQL
+* Django Models & Migrations
+* Virtual environments
 
-## Objectives
+## Learning Objectives
 
 By the end of this, developers should be able to:
 
 * Use Django to create views
 * Use routing in Django
 * Create templates using Django
-* Complete CRUD actions in Django
+* Complete CRUD functionality in Django
 
-## Introduction
+## Review
 
-In the previous lesson, we looked at how Django deals with data using models.
-Today we are going to look at how to actually display that data using views and
-templates!
+In the previous lesson, we learned how Django deals with data using models. We updated our `settings.py` file with the `DATABASE` and `INSTALLED APPS` we neeede. We utilized the `models.py` file to define our schema, set our data types and require constraints. We used our `admin.py` file to allow our superuser to perform CRUD on our application in the Django UI. There are a lot of other files here that we haven't used.
+
+### You Do: Django Application File Review (5 min)
+
+Take a few minutes to look through the files in our application, knowing what you learned in the last lesson. What have we done so far? What files will we need in today's lesson?
 
 ## View Functions
 
-Using the models from this morning, let's create some views to display our
-application's data! Views are really similar to controllers in the other
-languages we have looked at so far. They pass data to our templates. 
+Using the `Artist` and `Song` models that we have already implemented, let's create views to display our application's data! Views are really similar to controllers in the other languages we have looked at so far. They pass data to our templates. 
 
-In your view file, you may see that `render` is already imported. This function
-is super helpful, and it does exactly what it sounds like - it renders views!
-
+**File: tunr/views.py**
 ```python
-# tunr/views.py
 from django.shortcuts import render
 
 from .models import Artist, Song
@@ -46,20 +43,26 @@ def artist_list(request):
     return render(request, 'tunr/artist_list.html', {'artists': artists})
 ```
 
-Let's break this function down a bit. Let's first look at the declaration of
-a function. It looks like any other Python function! The only parameter to it is
-the request, which is what it sounds like. This is the HTTP Request dictionary.
-Then we are selecting all of the artists from the database into a QuerySet
-called artists. 
+On the first line, you will see that `render` is already imported. This function is super helpful, and it does exactly what it sounds like - it renders views! Next, we have imported our models, `Artist` and `Song`.
 
-On the third line, we see that we are rendering a template. The first argument
-is the request argument, the second is the template that we want to render, and
-the third is a dictionary with the data we want to send to the view. In this
-case, that's the artist QuerySet with the key 'artists'.
+Let's break the function down a bit:
+* The declaration of the function looks like any other Python function! The only parameter passed into it is the request, which is exactly what it sounds like. This represents the HTTP Request dictionary.
+* Next, we are selecting all of the artists from the database into a QuerySet called artists. 
+* On the third line, we see that we are rendering a template. The first argument is the request argument. The second is the template that we want to render, and the third is a dictionary (which is Python's equivalent to an object!) with the data we want to send to the template. In this case, we are sending the artist QuerySet with the key 'artists'.
 
 ### You Do: Song List Function
 
 Write the view and the url to list all of the songs in the application.
+
+<details>
+<summary>Solution:</summary>
+**File: tunr/views.py**
+```python
+def song_list(request):
+    songs = Song.objects.all()
+    return render(request, 'tunr/song_list.html', {'songs': songs})
+```
+</details>
 
 ## URLs
 

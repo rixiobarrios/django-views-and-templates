@@ -652,6 +652,7 @@ Finally, update the `href` in `artist_detail.html` with a path to the `artist_ed
 
 Do the same thing for the song edit form!
 
+<details>
 <summary>Solution: Song Edit View in tunr/views.py</summary>
 
 ```python

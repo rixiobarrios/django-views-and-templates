@@ -55,14 +55,14 @@ Let's break the function down a bit:
 Write the view and the url to list all of the songs in the application.
 
 <details>
-<b><summary>Solution: Song List Function</summary></b>
-File: tunr/views.py
-<br>
+<summary>Solution: Song List Function</summary>
+
 ```python
 def song_list(request):
     songs = Song.objects.all()
     return render(request, 'tunr/song_list.html', {'songs': songs})
 ```
+
 </details>
 
 ## URLs

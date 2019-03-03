@@ -686,27 +686,49 @@ def song_edit(request, pk):
 
 </details>
 
-### We Do: Artist Delete
+
+## We Do: Artist Delete
 
 Delete functions are really simple as well.
 
+**File: tunr/views.py**
 ```python
-# tunr/views.py
 def artist_delete(request, pk):
     Artist.objects.get(id=pk).delete()
     return redirect('artist_list')
 ```
+
 We just need to find an artist, delete it, and then redirect to the index page.
 
-Let's add its url: 
+Let's add the url:
+
+**File: tunr/urls.py**
 ```python
-# tunr/urls.py
     path('artists/<int:pk>/delete', views.artist_delete, name='artist_delete'),
 ```
 
 ### You Do: Song Delete
 
 Do the same thing for Songs!
+
+<details>
+<summary>Solution: Song Delete View in tunr/views.py</summary>
+
+```python
+def song_delete(request, pk):
+    Song.objects.get(id=pk).delete()
+    return redirect('song_list')
+```
+
+</details>
+<details>
+<summary>Solution: Song Delete URL in tunr/urls.py</summary>
+
+```python
+    path('songs/<int:pk>/delete', views.song_delete, name='song_delete')
+```
+
+</details>
 
 ## Bonus: Jinja
 

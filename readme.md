@@ -453,14 +453,10 @@ Let's break this down:
 
 ## We Do: Artist Create
 
-So far we've just shown our artists. Let's now create a new one! First, let's
-make a file called `forms.py`. This is going to be where we make our forms using
-Python code! 
+So far we've just shown our artists. Let's now create a new one! First, create a file called `forms.py` in the `tunr` directory. This is going to be where we make our forms using Python code.
 
-We do so like this:
-
+**File: tunr/forms.py**
 ```python
-# tunr/forms.py
 from django import forms
 from .models import Artist, Song
 
@@ -471,25 +467,23 @@ class ArtistForm(forms.ModelForm):
         fields = ('name', 'photo_url', 'nationality',)
 
 ```
+Let's break this down:
+* First, we will create a class to house our form.
+* Inside of it we will declare another class. The `Meta` class within the form contains meta data we have to describe the form. In this case, the model attached to the form and the fields we want to include in our form.
+* Note that the fields are in parenthesis instead of square brackets - they are in a tuple instead of a list! Tuples are like lists but they are immutable. They can't be changed.
 
-First, we will create a class to house our form. Inside of it we will declare
-another class. The Meta class within the form contains meta data we have to
-describe the form. In this case, the model attached to the form and the fields
-we want to include in our form. Note that the fields are in parenthesis instead
-of square brackets - they are in a tuple instead of a list! Tuples are like
-lists but they are immutable -- they can't be changed.
+The rationale for the `Meta` class within the class is that it contains information describing the class that isn't specific to a particular instance, rather it just contains configuration details.
 
-The rationale for the `Meta` class within the class is that it contains
-information describing the class that isn't specific to a particular instance,
-rather it just contains configuration details (bonus: [you can do this for
-models as well](https://docs.djangoproject.com/en/1.11/ref/models/options/)).
-For clarification (and maybe interview) purposes, this is different than
-a Python `metaclass`. They deal with meta-programming in Python! 
+(Bonus: [You can do this for models as well](https://docs.djangoproject.com/en/1.11/ref/models/options/)).
 
-Now, in our `views.py` file, let's import our ArtistForm class make a view function:
+For clarification (and maybe interview) purposes, this is different than a Python `metaclass`. They deal with meta-programming in Python!
 
+In our `views.py` file, let's add functionality to create an artist:
+
+**File: tunr/views.py**
 ```python
-# tunr/views.py
+from django.shortcuts import render, redirect
+
 from .forms import ArtistForm
 
 def artist_create(request):
@@ -503,25 +497,23 @@ def artist_create(request):
     return render(request, 'tunr/artist_form.html', {'form': form})
 ```
 
-We must also change the first line of our file to `from django.shortcuts import
-render, redirect` so that we have redirects available to us.
+What happening here?
+* We must change the first line of our file to `from django.shortcuts import render, redirect` so that we have redirects available to us.
+* We must import our ArtistForm class
+* This function is a little bit different than what we have seen so far. Instead of having different functions that handle different types of requests, we can handle multiple types within the same function in Django. So, in the first line we check to see if our request is a post request. If it is, we will fill in our form with data from the post request, and check if the form is valid. If it is valid, then we will save the new artist and redirect to it's show page. If it errors, then we will render the artist form with those errors. 
+* If instead the request method is 'get', we just create an instance of the form without any pre-filled data, and then we will render the form template.
 
-Let's break down this function: instead of having different functions that
-handle different types of requests, we can handle multiple types within the same
-function in Django. So, in the first line we check to see if our request is
-a post request. If it is, we will fill in our form with data from the post
-request, check if the form is valid, if it is, then we will save the new artist
-and redirect to it's detail view. If it errors, then we will render the artist
-form with those errors. 
+Next, add a url:
 
-If instead the request method is 'get', we just create an instance of the form
-without any pre-filled data, and then we will render the form template.
+**File: tunr/urls.py**
+```python
+    path('artists/new', views.artist_create, name='artist_create'),
+```
 
-Now let's make the template. Since we already declared the fields we want in our
-form in the `forms.py` file, we can just do this:
+Finally, let's make the template. Since we already declared the fields we want in our form in the `forms.py` file, we can just do this:
 
+**File: tunr/templates/tunr/artist_form.html**
 ```html
-<!-- tunr/templates/tunr/artist_form.html -->
 {% extends 'tunr/base.html' %}
 
 {% block content %}
@@ -534,16 +526,12 @@ form in the `forms.py` file, we can just do this:
 {% endblock %}
 ```
 
-We declare our form tags in html, we need to have our `csrf_token`, and then we
-can just insert our form like `{{ form.as_p }}`. The `.as_p` just formats the
-form nicely, you could also just do `{{ form }}` but it would be ugly. 
+When we declare our form tags in html we need to have our `csrf_token`, and then we can just insert our form like `{{ form.as_p }}`. The `.as_p` just formats the form nicely, you could also just do `{{ form }}` but it would be ugly. We also need a submit button and then we are good! Errors are handled for us in-line!
 
-We also need a submit button and then we are good! Errors are handled for us
-in-line!
+In our `artist_list.html` file, update the `href` to include a path to our `artist_create` url.
 
-In our `artist_list.html` file, update the `href` to include a path to our `artist_create` url:
+**File: tunr/templates/tunr/artist_list.html**
 ```html
-<!-- `tunr/templates/tunr/artist_list.html` -->
 <h2>Artists <a href="{% url 'artist_create' %}">(+)</a></h2>
 <ul>
     {% for artist in artists %}
@@ -556,16 +544,63 @@ In our `artist_list.html` file, update the `href` to include a path to our `arti
 </ul>
 ```
 
-Finally, just add a url:
-
-```python
-# tunr/urls.py
-    path('artists/new', views.artist_create, name='artist_create'),
-```
 
 ### You Do: Song Create
 
 Your turn! Do the same as above but for the song creation form.
+
+<details>
+<summary>Solution: Song Create Form in tunr/forms.py</summary>
+
+```python
+from django import forms
+from .models import Artist, Song
+
+class SongForm(forms.ModelForm):
+    
+    class Meta:
+        model = Song
+        fields = ('title', 'album', 'preview_url', 'artist',)
+```
+
+</details>
+<details>
+<summary>Solution: Song Create View in tunr/views.py</summary>
+
+```python
+def song_create(request):
+    if request.method == 'POST':
+        form = SongForm(request.POST)
+        if form.is_valid():
+            song = form.save()
+            return redirect('song_detail', pk=song.pk)
+    else:
+        form = SongForm()
+    return render(request, 'tunr/song_form.html', {'form': form})
+```
+
+</details>
+<summary>Solution: Song Create URL in tunr/urls.py</summary>
+
+```python
+    path('songs/new', views.song_create, name='song_create'),
+```
+
+</details>
+<details>
+<summary>Solution: Song Create Template in tunr/templates/tunr/song_form.html</summary>
+
+```python
+{% extends 'tunr/base.html' %} {% block content %}
+<h1>New Song</h1>
+<form method="POST" class="song-form">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit" class="save btn btn-default">Save</button>
+</form>
+{% endblock %}
+```
+
+</details>
 
 ### We Do: Artist Edit
 

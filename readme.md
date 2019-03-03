@@ -121,16 +121,18 @@ urlpatterns = [
 
 </details>
 
+
+## Templates and Django Templating Language
+
 Now that we have two URLs, let's finish up by writing the templates to render our views!
 
-### Templates and Django Templating Language
+In previous classes, we've used Handlebars as our primary templating language. Django has its own! It looks a lot like Handlebars in that it uses a bunch of curly braces. 
 
-In previous classes, we've seen the templating languages ERB and Handlebars.
-Django also has its own! It looks a lot like Handlebars  in that it uses a bunch
-of curly braces. In order to duplicate what we have on the version of Tunr, let's add the following code:
+In the `tunr` directory, add a `templates` directory and a `tunr` subdirectory. Here, create a file called `artist_list.html` and add the following code. In your browser, navigate to `localhost:8000` and see what appears!
+> NOTE: If you do not have your server running already, run the command `python manage.py runserver` in the virtual environment of your project folder in your terminal.
 
+**File: tunr/templates/tunr/artist_list.html**
 ```html
-<!-- `tunr/templates/tunr/artist_list.html` -->
 <h2>Artists <a href="">(+)</a></h2>
 <ul>
     {% for artist in artists %}
@@ -140,16 +142,33 @@ of curly braces. In order to duplicate what we have on the version of Tunr, let'
     {% endfor %}
 </ul>
 ```
+What's happening here?
+* Right now, we will keep our `href` values blank until we have more routes. We will eventually add paths to URLS here, as we create them throughout this lesson.
+* The Django template here loops through our QuerySet of artists, rendering the name of each.
+* The distinction between `{{}}` and `{%%}` usually is the difference between rendering or just running code (i.e. if's or for's). The one exception is with url's - which we will see later on today. 
 
-Right now, we will keep our `href`'s blank until we have more routes. The Django
-template here loops through our QuerySet of artists, rendering the name of each.
-The distinction between `{{}}` and `{%%}` usually is the difference between
-rendering or just running code (i.e. if's or for's). The one exception is with
-url's - which we will see later on today. 
+### You Do: Song List Template
 
-### You Do: Create List View for Songs
+Add a template file `song_list.html` to render the Song List.
 
-### We Do: Artist Show
+<details>
+<summary>Solution: Song List URL</summary>
+
+```python
+<h2>Songs</h2>
+<ul>
+    {% for song in songs %}
+    <li>
+        <a href="">{{ song.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+```
+
+</details>
+
+
+## We Do: Artist Show
 
 Let's look at another route -- let's do show this time. 
 

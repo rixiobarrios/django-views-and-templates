@@ -159,11 +159,7 @@ urlpatterns = [
 ## Templates and Django Templating Language
 
 Now that we have two URLs, let's finish up by writing the templates to render
-our views!
-
-In previous classes, we've used Handlebars as our primary templating language.
-Django has its own! It looks a lot like Handlebars in that it uses a bunch of
-curly braces.
+our views! Django has its own templating language used for rendering, which its own syntax.
 
 In the `tunr` directory, add a `templates` directory and a `tunr` subdirectory.
 Here, create a file called `artist_list.html` and add the following code. In

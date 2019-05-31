@@ -338,9 +338,6 @@ that! Add a `base.html` file in the `tunr` templates. It's going to look exactly
 like any other HTML base template we normally have, with one exception: we will
 have a block where we want our template to go. We will name this block content.
 
-> NOTE: This is very similar to the {{{body}}} tag we used in the `layout.hbs`
-> file in Handlebars!
-
 > NOTE: We could have multiple blocks if we wanted. In that case they would be
 > named other things -- say "title" or "header" instead of "content".
 
@@ -370,7 +367,7 @@ templates, we must add some code to each of our template files.
 {% extends 'tunr/base.html' %}
 
 {% block content %}
-    <h2>Artists <a href="{% url 'artist_create' %}">(+)</a></h2>
+    <h2>Artists <a href="">(+)</a></h2>
     <ul>
         {% for artist in artists %}
             <li>

@@ -8,19 +8,19 @@ are going to look at how to actually display our data using views and templates!
 
 ## Prerequisites
 
-* Python
-* SQL & PostgreSQL
-* Django Models & Migrations
-* Virtual environments
+- Python
+- SQL & PostgreSQL
+- Django Models & Migrations
+- Virtual environments
 
 ## Learning Objectives
 
 By the end of this, developers should be able to:
 
-* Use Django to create views
-* Use routing in Django
-* Create templates using Django
-* Complete CRUD functionality in Django
+- Use Django to create views
+- Use routing in Django
+- Create templates using Django
+- Complete CRUD functionality in Django
 
 ## Review
 
@@ -71,9 +71,9 @@ Next, we have imported our models, `Artist` and `Song`.
 
 Let's break the function down a bit:
 
-* The declaration of the function looks like any other Python function! The only parameter passed into it is the request, which is exactly what it sounds like. This represents the HTTP Request dictionary.
-* Next, we are selecting all of the artists from the database into a QuerySet called artists.
-* On the third line, we see that we are rendering a template. The first argument is the request argument. The second is the template that we want to render, and the third is a dictionary (which is Python's equivalent to an object!) with the data we want to send to the template. In this case, we are sending the artist QuerySet with the key 'artists'.
+- The declaration of the function looks like any other Python function! The only parameter passed into it is the request, which is exactly what it sounds like. This represents the HTTP Request dictionary.
+- Next, we are selecting all of the artists from the database into a QuerySet called artists.
+- On the third line, we see that we are rendering a template. The first argument is the request argument. The second is the template that we want to render, and the third is a dictionary (which is Python's equivalent to an object!) with the data we want to send to the template. In this case, we are sending the artist QuerySet with the key 'artists'.
 
 ### You Do: Song List Function
 
@@ -109,7 +109,7 @@ from django.urls import path
 from django.contrib import admin
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     path('', include('tunr.urls')),
 ]
 ```
@@ -135,9 +135,9 @@ urlpatterns = [
 
 The path takes three arguments:
 
-* The first argument represents the URL path. Here, the artist list is going to be rendered in the root URL. Similar to the "/" URL in other languages, the path of the root URL starts, ends, and has nothing in between. In Django, we do not even need to include the `/`. This way of doing URLs is great because they are explicit. We no longer have to reorder or rename URLs in order to make them work!
-* The URL's second argument is the view function this route is going to match up with in the view file. So, at the root URL, the application will run the `artist_list` function we wrote in `views.py`.
-* Thirdly, we are going to use a named parameter. This is going to be referenced in our templates in order to link from one page to another.
+- The first argument represents the URL path. Here, the artist list is going to be rendered in the root URL. Similar to the "/" URL in other languages, the path of the root URL starts, ends, and has nothing in between. In Django, we do not even need to include the `/`. This way of doing URLs is great because they are explicit. We no longer have to reorder or rename URLs in order to make them work!
+- The URL's second argument is the view function this route is going to match up with in the view file. So, at the root URL, the application will run the `artist_list` function we wrote in `views.py`.
+- Thirdly, we are going to use a named parameter. This is going to be referenced in our templates in order to link from one page to another.
 
 ### You Do: Song List URL
 
@@ -155,7 +155,6 @@ urlpatterns = [
 
 </details>
 
-
 ## Templates and Django Templating Language
 
 Now that we have two URLs, let's finish up by writing the templates to render
@@ -165,27 +164,26 @@ In the `tunr` directory, add a `templates` directory and a `tunr` subdirectory.
 Here, create a file called `artist_list.html` and add the following code. In
 your browser, navigate to `localhost:8000` and see what appears!
 
-> NOTE: If you do not have your server running already, run the command `python
-> manage.py runserver` in the virtual environment of your project folder in your
+> NOTE: If you do not have your server running already, run the command `python manage.py runserver` in the virtual environment of your project folder in your
 > terminal.
 
 ```html
 <!-- tunr/templates/tunr/artist_list.html -->
 <h2>Artists <a href="">(+)</a></h2>
 <ul>
-    {% for artist in artists %}
-        <li>
-            <a href="">{{ artist.name }}</a>
-        </li>
-    {% endfor %}
+  {% for artist in artists %}
+  <li>
+    <a href="">{{ artist.name }}</a>
+  </li>
+  {% endfor %}
 </ul>
 ```
 
 What's happening here?
 
-* Right now, we will keep our `href` values blank until we have more routes. We will eventually add paths to URLS here, as we create them throughout this lesson.
-* The Django template here loops through our QuerySet of artists, rendering the name of each.
-* The distinction between `{{}}` and `{%%}` usually is the difference between rendering or just running code (i.e. if's or for's). The one exception is with url's - which we will see later on today.
+- Right now, we will keep our `href` values blank until we have more routes. We will eventually add paths to URLS here, as we create them throughout this lesson.
+- The Django template here loops through our QuerySet of artists, rendering the name of each.
+- The distinction between `{{}}` and `{%%}` usually is the difference between rendering or just running code (i.e. if's or for's). The one exception is with url's - which we will see later on today.
 
 ### You Do: Song List Template
 
@@ -198,11 +196,11 @@ song list in your browser, what path will you use?
 ```html
 <h2>Songs</h2>
 <ul>
-    {% for song in songs %}
-    <li>
-        <a href="">{{ song.title }}</a>
-    </li>
-    {% endfor %}
+  {% for song in songs %}
+  <li>
+    <a href="">{{ song.title }}</a>
+  </li>
+  {% endfor %}
 </ul>
 ```
 
@@ -245,22 +243,22 @@ Finally, let's write our template.
 <h2>{{ artist.name }} <a href="">(edit)</a></h2>
 <h4>{{ artist.nationality }}</h4>
 
-<img src="{{ artist.photo_url }}" alt="" class="artist-photo">
+<img src="{{ artist.photo_url }}" alt="" class="artist-photo" />
 
 <h3>Songs <a href="">(+)</a></h3>
 <ul>
-    {% for song in artist.songs.all %}
-        <li>
-            <a href="">{{ song.title }}-{{ song.album }}</a>
-        </li>
-    {% endfor %}
+  {% for song in artist.songs.all %}
+  <li>
+    <a href="">{{ song.title }}-{{ song.album }}</a>
+  </li>
+  {% endfor %}
 </ul>
 ```
 
 Here, we are showing some attributes of the artist object, then we are looping
 through the songs attached to that artist.
 
-Let's take a step back to our `artist_list.html`.  Before, we omitted the links
+Let's take a step back to our `artist_list.html`. Before, we omitted the links
 to to the next page. Now that we have created our show page, let's add its URL
 tag to the `href` attribute.
 
@@ -272,7 +270,7 @@ following code:
 ```html
 <!-- tunr/templates/tunr/artist_list.html -->
 <a href="{% url 'artist_detail' pk=artist.pk %}">
-    {{ artist.name }}
+  {{ artist.name }}
 </a>
 ```
 
@@ -315,7 +313,7 @@ Album: {{ song.album }}
 
 ```html
 <a href="{% url 'song_detail' pk=song.pk %}">
-    {{ song.title }}-{{ song.album }}
+  {{ song.title }}-{{ song.album }}
 </a>
 ```
 
@@ -325,7 +323,7 @@ Album: {{ song.album }}
 
 ```html
 <a href="{% url 'song_detail' pk=song.pk %}">
-    {{ song.title }}
+  {{ song.title }}
 </a>
 ```
 
@@ -344,18 +342,17 @@ have a block where we want our template to go. We will name this block content.
 ```html
 <!-- tunr/templates/tunr/base.html -->
 <html>
-    <head>
-        <title>Tunr</title>
-    </head>
-    <body>
-        <h1>Tun.r</h1>
-        <nav>
-            <a href="/songs">Songs</a>
-            <a href="/">Artists</a>
-        </nav>
-        {% block content %}
-        {% endblock %}
-    </body>
+  <head>
+    <title>Tunr</title>
+  </head>
+  <body>
+    <h1>Tun.r</h1>
+    <nav>
+      <a href="/songs">Songs</a>
+      <a href="/">Artists</a>
+    </nav>
+    {% block content %} {% endblock %}
+  </body>
 </html>
 ```
 
@@ -364,22 +361,19 @@ templates, we must add some code to each of our template files.
 
 ```html
 <!-- tunr/templates/tunr/artist_list.html -->
-{% extends 'tunr/base.html' %}
-
-{% block content %}
-    <h2>Artists <a href="">(+)</a></h2>
-    <ul>
-        {% for artist in artists %}
-            <li>
-                <a href="{% url 'artist_detail' pk=artist.id %}">{{ artist.name }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+{% extends 'tunr/base.html' %} {% block content %}
+<h2>Artists <a href="{% url 'artist_create' %}">(+)</a></h2>
+<ul>
+  {% for artist in artists %}
+  <li>
+    <a href="{% url 'artist_detail' pk=artist.id %}">{{ artist.name }}</a>
+  </li>
+  {% endfor %}
+</ul>
 {% endblock %}
 ```
 
-Each template is going to extend the base by adding `{% extends 'tunr/base.html'
-%}` to the beginning of the file. The content between `{% block content %}` and
+Each template is going to extend the base by adding `{% extends 'tunr/base.html' %}` to the beginning of the file. The content between `{% block content %}` and
 `{% endblock %}` will render in place of the content block in the `base.html`
 file.
 
@@ -391,102 +385,102 @@ a `tunr.css` file to the `tunr` directory. Copy the following css code into
 ```css
 /* tunr/static/css/tunr.css */
 body {
-    font-family: 'Helvetica Neue', sans-serif;
-    max-width: 50em;
-    margin: auto;
-    padding: 2em 1em;
+  font-family: "Helvetica Neue", sans-serif;
+  max-width: 50em;
+  margin: auto;
+  padding: 2em 1em;
 }
 
 nav a {
-    border: 1px solid black;
-    margin: .5em;
-    padding: .5em;
-    background-color: #eeeeee;
+  border: 1px solid black;
+  margin: 0.5em;
+  padding: 0.5em;
+  background-color: #eeeeee;
 }
 
 nav a:hover {
-    background-color: orange;
-    color: blue;
+  background-color: orange;
+  color: blue;
 }
 
 a,
 a:visited {
-    text-decoration: none;
-    color: blue;
+  text-decoration: none;
+  color: blue;
 }
 
 a:hover {
-    background-color: #ccc;
+  background-color: #ccc;
 }
 
 ul {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 li {
-    margin: .25em;
+  margin: 0.25em;
 }
 
 h1 {
-    font: inherit;
-    color: inherit;
-    letter-spacing: -.05em;
-    text-decoration: none;
-    border-bottom: 1px solid black;
+  font: inherit;
+  color: inherit;
+  letter-spacing: -0.05em;
+  text-decoration: none;
+  border-bottom: 1px solid black;
 }
 
-h2>a {
-    font-size: .75em;
+h2 > a {
+  font-size: 0.75em;
 }
 
 input {
-    display: block;
-    margin: 5px 0 20px 0;
-    padding: 9px;
-    border: solid 1px black;
-    width: 300px;
-    background: whitesmoke;
+  display: block;
+  margin: 5px 0 20px 0;
+  padding: 9px;
+  border: solid 1px black;
+  width: 300px;
+  background: whitesmoke;
 }
 
-input[type=submit],
+input[type="submit"],
 a.delete {
-    width: auto;
-    padding: 9px 15px;
-    background-color: gray;
-    border: 0;
-    font-size: 14px;
-    color: #FFFFFF;
+  width: auto;
+  padding: 9px 15px;
+  background-color: gray;
+  border: 0;
+  font-size: 14px;
+  color: #ffffff;
 }
 
 a.delete {
-    background-color: red;
+  background-color: red;
 }
 
 .artist-photo {
-    width: 400px;
+  width: 400px;
 }
 
 span.nationality {
-    font-size: .5em;
+  font-size: 0.5em;
 }
 
 .user-info {
-    float: right;
+  float: right;
 }
 
 a.fav {
-    text-decoration: none;
-    color: red;
+  text-decoration: none;
+  color: red;
 }
 
 a.no-fav {
-    text-decoration: none;
-    color: black;
+  text-decoration: none;
+  color: black;
 }
 
 .fav:visited,
 .no-fav:visited {
-    text-decoration: none;
+  text-decoration: none;
 }
 ```
 
@@ -496,27 +490,26 @@ Finally, add the following code into `base.html`:
 <!-- tunr/templates/tunr/base.html -->
 {% load staticfiles %}
 <html>
-    <head>
-        <title>Tunr</title>
-        <link rel="stylesheet" href="{% static 'css/tunr.css' %}">
-    </head>
-    <body>
-        <h1>Tun.r</h1>
-        <nav>
-            <a href="/songs">Songs</a>
-            <a href="/">Artists</a>
-        </nav>
-        {% block content %}
-        {% endblock %}
-    </body>
+  <head>
+    <title>Tunr</title>
+    <link rel="stylesheet" href="{% static 'css/tunr.css' %}" />
+  </head>
+  <body>
+    <h1>Tun.r</h1>
+    <nav>
+      <a href="/songs">Songs</a>
+      <a href="/">Artists</a>
+    </nav>
+    {% block content %} {% endblock %}
+  </body>
 </html>
 ```
 
 Let's break this down:
 
-* On the first line, we are telling Django to load the static files onto the current page.
-* Then in the `link` tag, we can refer to our stylesheet and include our static `tunr.css` file. This is essentially the same as requiring any stylesheet in an html boilerplate.
-* This may seem a bit messy, but it really helps when you deploy your app, especially if you want to host your static files on a separate server.
+- On the first line, we are telling Django to load the static files onto the current page.
+- Then in the `link` tag, we can refer to our stylesheet and include our static `tunr.css` file. This is essentially the same as requiring any stylesheet in an html boilerplate.
+- This may seem a bit messy, but it really helps when you deploy your app, especially if you want to host your static files on a separate server.
 
 ## We Do: Artist Create
 
@@ -538,9 +531,9 @@ class ArtistForm(forms.ModelForm):
 
 Let's break this down:
 
-* First, we will create a class to house our form.
-* Inside of it we will declare another class. The `Meta` class within the form contains meta data we have to describe the form. In this case, the model attached to the form and the fields we want to include in our form.
-* Note that the fields are in parenthesis instead of square brackets - they are in a tuple instead of a list! Tuples are like lists but they are immutable. They can't be changed.
+- First, we will create a class to house our form.
+- Inside of it we will declare another class. The `Meta` class within the form contains meta data we have to describe the form. In this case, the model attached to the form and the fields we want to include in our form.
+- Note that the fields are in parenthesis instead of square brackets - they are in a tuple instead of a list! Tuples are like lists but they are immutable. They can't be changed.
 
 The rationale for the `Meta` class within the class is that it contains
 information describing the class that isn't specific to a particular instance,
@@ -572,10 +565,10 @@ def artist_create(request):
 
 What happening here?
 
-* We must change the first line of our file to `from django.shortcuts import render, redirect` so that we have redirects available to us.
-* We must import our ArtistForm class
-* This function is a little bit different than what we have seen so far. Instead of having different functions that handle different types of requests, we can handle multiple types within the same function in Django. So, in the first line we check to see if our request is a post request. If it is, we will fill in our form with data from the post request, and check if the form is valid. If it is valid, then we will save the new artist and redirect to it's show page. If it errors, then we will render the artist form with those errors.
-* If instead the request method is 'get', we just create an instance of the form without any pre-filled data, and then we will render the form template.
+- We must change the first line of our file to `from django.shortcuts import render, redirect` so that we have redirects available to us.
+- We must import our ArtistForm class
+- This function is a little bit different than what we have seen so far. Instead of having different functions that handle different types of requests, we can handle multiple types within the same function in Django. So, in the first line we check to see if our request is a post request. If it is, we will fill in our form with data from the post request, and check if the form is valid. If it is valid, then we will save the new artist and redirect to it's show page. If it errors, then we will render the artist form with those errors.
+- If instead the request method is 'get', we just create an instance of the form without any pre-filled data, and then we will render the form template.
 
 Next, add a url:
 
@@ -589,15 +582,12 @@ in our form in the `forms.py` file, we can just do this:
 
 ```html
 <!-- tunr/templates/tunr/artist_form.html -->
-{% extends 'tunr/base.html' %}
-
-{% block content %}
-    <h1>New Artist</h1>
-    <form method="POST" class="artist-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
+{% extends 'tunr/base.html' %} {% block content %}
+<h1>New Artist</h1>
+<form method="POST" class="artist-form">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit" class="save btn btn-default">Save</button>
+</form>
 {% endblock %}
 ```
 
@@ -609,18 +599,17 @@ need a submit button and then we are good! Errors are handled for us in-line!
 In our `artist_list.html` file, update the `href` to include a path to our
 `artist_create` url.
 
-
 ```html
 <!-- tunr/templates/tunr/artist_list.html -->
 <h2>Artists <a href="{% url 'artist_create' %}">(+)</a></h2>
 <ul>
-    {% for artist in artists %}
-        <li>
-            <a href="{% url 'artist_detail' pk=artist.pk %}">
-                {{ artist.name }}
-            </a>
-        </li>
-    {% endfor %}
+  {% for artist in artists %}
+  <li>
+    <a href="{% url 'artist_detail' pk=artist.pk %}">
+      {{ artist.name }}
+    </a>
+  </li>
+  {% endfor %}
 </ul>
 ```
 
@@ -673,14 +662,11 @@ path('songs/new', views.song_create, name='song_create')
 <summary>Solution: Song Create Template in tunr/templates/tunr/song_form.html</summary>
 
 ```html
-{% extends 'tunr/base.html' %}
-
-{% block content %}
+{% extends 'tunr/base.html' %} {% block content %}
 <h1>New Song</h1>
 <form method="POST" class="song-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="save btn btn-default">Save</button>
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit" class="save btn btn-default">Save</button>
 </form>
 {% endblock %}
 ```
@@ -692,6 +678,7 @@ path('songs/new', views.song_create, name='song_create')
 ```html
 <h3>Songs <a href="{% url 'song_create' %}">(+)</a></h3>
 ```
+
 </details>
 
 ## We Do: Artist Edit
@@ -729,7 +716,9 @@ Finally, update the `href` in `artist_detail.html` with a path to the `artist_ed
 
 ```html
 <!-- tunr/templates/tunr/artist_detail.html -->
-<h2>{{ artist.name }} <a href="{% url 'artist_edit' pk=artist.pk %}">(edit)</a></h2>
+<h2>
+  {{ artist.name }} <a href="{% url 'artist_edit' pk=artist.pk %}">(edit)</a>
+</h2>
 ```
 
 ### You Do: Song Edit
@@ -833,21 +822,21 @@ is a sandbox to test them out.
 
 A quick primer on what will be helpful for creating urls:
 
-* `^` - beginning of the text
-* `$` - end of  text
-* `\d` - digit
-* `+` - required
-* `()` - captures part of a pattern
+- `^` - beginning of the text
+- `$` - end of text
+- `\d` - digit
+- `+` - required
+- `()` - captures part of a pattern
 
 ## Additional Resources
 
-* [Django Docs: Templates](https://docs.djangoproject.com/en/2.1/topics/templates/)
-* [Django Docs: The Django Templating Language](https://docs.djangoproject.com/en/2.1/ref/templates/language/)
-* [Django Docs: Writing Views](https://docs.djangoproject.com/en/2.1/topics/http/views/)
-* [Django Docs: Class Based Views](https://docs.djangoproject.com/en/2.1/topics/class-based-views/)
+- [Django Docs: Templates](https://docs.djangoproject.com/en/2.1/topics/templates/)
+- [Django Docs: The Django Templating Language](https://docs.djangoproject.com/en/2.1/ref/templates/language/)
+- [Django Docs: Writing Views](https://docs.djangoproject.com/en/2.1/topics/http/views/)
+- [Django Docs: Class Based Views](https://docs.djangoproject.com/en/2.1/topics/class-based-views/)
 
 ## [License](LICENSE)
 
 1. All content is licensed under a CC­BY­NC­SA 4.0 license.
 1. All software code is licensed under GNU GPLv3. For commercial use or
-    alternative licensing, please contact legal@ga.co.
+   alternative licensing, please contact legal@ga.co.

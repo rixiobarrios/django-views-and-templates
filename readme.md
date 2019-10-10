@@ -183,7 +183,7 @@ What's happening here?
 
 - Right now, we will keep our `href` values blank until we have more routes. We will eventually add paths to URLS here, as we create them throughout this lesson.
 - The Django template here loops through our QuerySet of artists, rendering the name of each.
-- The distinction between `{{}}` and `{%%}` usually is the difference between rendering or just running code (i.e. if's or for's). The one exception is with url's - which we will see later on today.
+- The distinction between `{{}}` and `{%%}` usually is the difference between rendering or just running code (i.e. if's or for's). The one exception is with url's - which we will see later on today. Formally, this is the distintion between [variables](https://docs.djangoproject.com/en/dev/topics/templates/#tags) and [tags](https://docs.djangoproject.com/en/dev/topics/templates/#tags) in Django's template language.
 
 ### You Do: Song List Template
 

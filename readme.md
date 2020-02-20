@@ -362,7 +362,7 @@ templates, we must add some code to each of our template files.
 ```html
 <!-- tunr/templates/tunr/artist_list.html -->
 {% extends 'tunr/base.html' %} {% block content %}
-<h2>Artists <a href="{% url 'artist_create' %}">(+)</a></h2>
+<h2>Artists <a href="">(+)</a></h2>
 <ul>
   {% for artist in artists %}
   <li>
@@ -488,7 +488,7 @@ Finally, add the following code into `base.html`:
 
 ```html
 <!-- tunr/templates/tunr/base.html -->
-{% load staticfiles %}
+{% load static %}
 <html>
   <head>
     <title>Tunr</title>
